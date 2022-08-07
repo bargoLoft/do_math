@@ -12,6 +12,7 @@ class StagePage extends StatefulWidget {
 class _StagePageState extends State<StagePage> {
   final _textController = TextEditingController();
   late List<int> questions;
+  String question = '';
   late int answer;
   int currentNumber = 0;
 
@@ -22,9 +23,14 @@ class _StagePageState extends State<StagePage> {
   }
 
   void getNewQuestion() {
-    questions = PlusQuestion(digital: 2, count: 3).getQuestion();
-    answer = questions.fold(0, (previousValue, element) {
-      return previousValue + element;
+    questions = PlusQuestion(digital: 3, count: 2).getQuestion();
+    question = '';
+    for (int i = 0; i < questions.length; i++) {
+      question += questions[i].toString();
+      if (i != questions.length - 1) question += '+';
+    }
+    answer = questions.fold(0, (total, element) {
+      return total + element;
     });
     print('${questions.toString()} $answer');
   }
@@ -72,10 +78,10 @@ class _StagePageState extends State<StagePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      questions.toString(),
-                      style: TextStyle(fontSize: 40),
+                      question,
+                      style: const TextStyle(fontSize: 40),
                     ),
                   ),
                   Row(
@@ -188,9 +194,9 @@ class _StagePageState extends State<StagePage> {
               getNewQuestion();
               _textController.clear();
               currentNumber += 1;
+              setState(() {});
             }
           }
-          setState(() {});
         },
         child: SizedBox(
           width: MediaQuery.of(context).size.width * (1 / 3),
