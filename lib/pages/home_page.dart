@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  Expanded(flex: 5, child: buildButton(context, '시작', 1 / 1)),
+                  Expanded(flex: 5, child: buildButton(context, '시작', 2 / 1, 50)),
                 ],
               ),
             ),
@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget buildButton(context, String title, double ratio) {
+Widget buildButton(context, String title, double ratio, [double textSize = 20]) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
     child: AspectRatio(
@@ -139,7 +139,7 @@ Widget buildButton(context, String title, double ratio) {
         ),
         child: Text(
           title,
-          style: const TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: textSize),
         ),
       ),
     ),

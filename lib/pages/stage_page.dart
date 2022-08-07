@@ -1,4 +1,6 @@
+import 'package:do_math/problems/1-1.dart';
 import 'package:flutter/material.dart';
+import '../problems/1-1.dart';
 
 class StagePage extends StatefulWidget {
   const StagePage({Key? key}) : super(key: key);
@@ -9,6 +11,24 @@ class StagePage extends StatefulWidget {
 
 class _StagePageState extends State<StagePage> {
   final _textController = TextEditingController();
+  late List<int> questions;
+  late int answer;
+  int currentNumber = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getNewQuestion();
+  }
+
+  void getNewQuestion() {
+    questions = PlusQuestion(digital: 2, count: 3).getQuestion();
+    answer = questions.fold(0, (previousValue, element) {
+      return previousValue + element;
+    });
+    print('${questions.toString()} $answer');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +59,7 @@ class _StagePageState extends State<StagePage> {
                   color: Colors.grey.shade200,
                 ),
                 Container(
-                  width: (MediaQuery.of(context).size.width) * 0.3,
+                  width: (MediaQuery.of(context).size.width) * 0.1 * currentNumber,
                   height: 2,
                   color: Colors.green,
                 )
@@ -51,10 +71,10 @@ class _StagePageState extends State<StagePage> {
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.all(10.0),
                     child: Text(
-                      '3+3',
+                      questions.toString(),
                       style: TextStyle(fontSize: 40),
                     ),
                   ),
@@ -65,12 +85,20 @@ class _StagePageState extends State<StagePage> {
                     children: [
                       const Text(
                         '= ',
-                        style: const TextStyle(fontSize: 40),
+                        style: TextStyle(fontSize: 40),
                       ),
                       SizedBox(
                         height: 60,
                         width: 150,
                         child: TextField(
+                          // onChanged: (index) {
+                          //   if (index == answer.toString()) {
+                          //     setState(() {
+                          //       getNewQuestion();
+                          //     });
+                          //   }
+                          // },
+                          enabled: false,
                           controller: _textController,
                           maxLines: 1,
                           //textAlign: TextAlign.center,
@@ -156,10 +184,15 @@ class _StagePageState extends State<StagePage> {
             _textController.clear();
           } else if (num != '←') {
             _textController.text += num;
+            if (_textController.text == answer.toString()) {
+              getNewQuestion();
+              _textController.clear();
+              currentNumber += 1;
+            }
           }
           setState(() {});
         },
-        child: Container(
+        child: SizedBox(
           width: MediaQuery.of(context).size.width * (1 / 3),
           height: MediaQuery.of(context).size.height * (0.11),
           child: Center(
