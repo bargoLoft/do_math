@@ -12,6 +12,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
+  int typeIndex = 0;
+  List type = ['+', '-', '×', '÷'];
 
   void _onItemTapped(int index) {
     if (_selectedIndex != index) {
@@ -79,7 +81,18 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  Expanded(flex: 5, child: buildButton(context, '시작', 2 / 1, 50)),
+                  Expanded(
+                      flex: 1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          buildTypeButton(context, '+', 1 / 1, 0, 40),
+                          buildTypeButton(context, '-', 1 / 1, 1, 40),
+                          buildTypeButton(context, '×', 1 / 1, 2, 40),
+                          buildTypeButton(context, '÷', 1 / 1, 3, 40),
+                        ],
+                      )),
+                  Expanded(flex: 4, child: buildButton(context, '시작', 2 / 1, 50, type[typeIndex])),
                 ],
               ),
             ),
@@ -121,9 +134,44 @@ class _HomePageState extends State<HomePage> {
       label: '',
     );
   }
+
+  Widget buildTypeButton(
+    context,
+    String title,
+    double ratio,
+    int index, [
+    double textSize = 20,
+  ]) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: AspectRatio(
+        aspectRatio: ratio,
+        child: ElevatedButton(
+          onPressed: () {
+            typeIndex = index;
+            setState(() {});
+          },
+          style: ButtonStyle(
+            elevation: MaterialStateProperty.all(0),
+            backgroundColor: MaterialStateProperty.all(Colors.white),
+            foregroundColor: MaterialStateProperty.all(Colors.black),
+            shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
+          ),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: (typeIndex == index) ? textSize : 20,
+              color: (typeIndex == index) ? Colors.blue : Colors.grey,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-Widget buildButton(context, String title, double ratio, [double textSize = 20]) {
+Widget buildButton(context, String title, double ratio, [double textSize = 20, String type = '+']) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
     child: AspectRatio(
@@ -134,7 +182,7 @@ Widget buildButton(context, String title, double ratio, [double textSize = 20]) 
               context,
               MaterialPageRoute(
                   builder: (context) => StagePage(
-                        type: '÷',
+                        type: type,
                       )));
         },
         style: ButtonStyle(
