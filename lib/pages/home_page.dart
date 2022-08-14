@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
           //   elevation: 0.0,
           //   toolbarHeight: 0.0, // Hide the AppBar
           // ),
+          backgroundColor: Colors.grey.shade100,
           appBar: AppBar(
             title: Text(
               widget.title,
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage> {
                 child: Icon(Icons.account_balance_outlined),
               ),
             ],
-            backgroundColor: Colors.grey.shade50,
+            backgroundColor: Colors.grey.shade100,
             foregroundColor: Colors.black,
             elevation: 0,
           ),
@@ -64,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: buildButton(context, '나의 점수', 1 / 2),
+                          child: buildButton(context, '오늘의 문제', 1 / 2),
                         ),
                         Expanded(
                           flex: 1,
@@ -129,9 +130,15 @@ Widget buildButton(context, String title, double ratio, [double textSize = 20]) 
       aspectRatio: ratio,
       child: ElevatedButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const StagePage()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => StagePage(
+                        type: '÷',
+                      )));
         },
         style: ButtonStyle(
+          elevation: MaterialStateProperty.all(0),
           backgroundColor: MaterialStateProperty.all(Colors.white),
           foregroundColor: MaterialStateProperty.all(Colors.black),
           shape: MaterialStateProperty.all(

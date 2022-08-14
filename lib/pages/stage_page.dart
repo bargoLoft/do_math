@@ -2,8 +2,14 @@ import 'package:do_math/problems/1-1.dart';
 import 'package:flutter/material.dart';
 import '../problems/1-1.dart';
 
+// ignore: must_be_immutable
 class StagePage extends StatefulWidget {
-  const StagePage({Key? key}) : super(key: key);
+  late String type;
+
+  StagePage({
+    required this.type,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<StagePage> createState() => _StagePageState();
@@ -31,15 +37,74 @@ class _StagePageState extends State<StagePage> {
   }
 
   void getNewQuestion() {
-    questions = PlusQuestion(digital: 1, count: 2).getQuestion();
+    if (widget.type == '+') {
+      getPlusQuestion();
+    } else if (widget.type == '-') {
+      getMinusQuestion();
+    } else if (widget.type == '×') {
+      getMultiQuestion();
+    } else if (widget.type == '÷') {
+      getDivideQuestion();
+    }
+  }
+
+  void getPlusQuestion() {
+    questions = PlusQuestion(count: 2, digital: 1).getQuestion();
     question = '';
     for (int i = 0; i < questions.length; i++) {
       question += questions[i].toString();
-      if (i != questions.length - 1) question += '+';
+      if (i != questions.length - 1) {
+        question += '+';
+      }
+      answer = questions.fold(0, (total, element) {
+        return total + element;
+      });
     }
-    answer = questions.fold(0, (total, element) {
-      return total + element;
-    });
+    print('${questions.toString()} $answer');
+  }
+
+  void getMinusQuestion() {
+    questions = MinusQuestion(count: 2, digital: 1).getQuestion();
+    question = '';
+    for (int i = 0; i < questions.length; i++) {
+      question += questions[i].toString();
+      if (i != questions.length - 1) {
+        question += '-';
+      }
+      answer = questions.fold(questions[0] + questions[0], (total, element) {
+        return total - element;
+      });
+    }
+    print('${questions.toString()} $answer');
+  }
+
+  void getMultiQuestion() {
+    questions = MultiQuestion(count: 2, digital: 1).getQuestion();
+    question = '';
+    for (int i = 0; i < questions.length; i++) {
+      question += questions[i].toString();
+      if (i != questions.length - 1) {
+        question += '×';
+      }
+      answer = questions.fold(1, (total, element) {
+        return total * element;
+      });
+    }
+    print('${questions.toString()} $answer');
+  }
+
+  void getDivideQuestion() {
+    questions = DivideQuestion(count: 2, digital: 1).getQuestion();
+    question = '';
+    for (int i = 0; i < questions.length; i++) {
+      question += questions[i].toString();
+      if (i != questions.length - 1) {
+        question += '÷';
+      }
+      answer = questions.fold(questions[0] * questions[0], (total, element) {
+        return total ~/ element;
+      });
+    }
     print('${questions.toString()} $answer');
   }
 
