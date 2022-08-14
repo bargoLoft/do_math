@@ -15,6 +15,7 @@ class _StagePageState extends State<StagePage> {
   String question = '';
   late int answer;
   int currentNumber = 0;
+  int currentAnswer = 0;
 
   @override
   void initState() {
@@ -22,8 +23,15 @@ class _StagePageState extends State<StagePage> {
     getNewQuestion();
   }
 
+  void refreshStage() {
+    currentNumber = 0;
+    currentAnswer = 0;
+    getNewQuestion();
+    setState(() {});
+  }
+
   void getNewQuestion() {
-    questions = PlusQuestion(digital: 3, count: 2).getQuestion();
+    questions = PlusQuestion(digital: 1, count: 2).getQuestion();
     question = '';
     for (int i = 0; i < questions.length; i++) {
       question += questions[i].toString();
@@ -33,6 +41,79 @@ class _StagePageState extends State<StagePage> {
       return total + element;
     });
     print('${questions.toString()} $answer');
+  }
+
+  void showResultPopup() {
+    showDialog(
+        context: context,
+        barrierColor: Colors.white.withOpacity(0.6),
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape:
+                const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50.0))),
+            child: AspectRatio(
+              aspectRatio: 10 / 11,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50.0),
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: currentAnswer.toString(),
+                          style: TextStyle(
+                            fontSize: 100,
+                            color: Colors.blue,
+                          ),
+                          children: [
+                            TextSpan(
+                                text: '/10',
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.grey,
+                                )),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                            iconSize: 40,
+                            onPressed: () {
+                              Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(Icons.home_rounded),
+                          ),
+                          IconButton(
+                            iconSize: 60,
+                            onPressed: () {
+                              Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
+                              refreshStage();
+                            },
+                            icon: Icon(Icons.refresh_rounded),
+                          ),
+                          IconButton(
+                            iconSize: 30,
+                            onPressed: () {
+                              Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(Icons.leaderboard_rounded),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   @override
@@ -97,13 +178,6 @@ class _StagePageState extends State<StagePage> {
                         height: 60,
                         width: 150,
                         child: TextField(
-                          // onChanged: (index) {
-                          //   if (index == answer.toString()) {
-                          //     setState(() {
-                          //       getNewQuestion();
-                          //     });
-                          //   }
-                          // },
                           enabled: false,
                           controller: _textController,
                           maxLines: 1,
@@ -191,9 +265,17 @@ class _StagePageState extends State<StagePage> {
           } else if (num != '←') {
             _textController.text += num;
             if (_textController.text == answer.toString()) {
-              getNewQuestion();
               _textController.clear();
               currentNumber += 1;
+              currentAnswer += 1;
+              if (currentNumber == 10) {
+                showResultPopup();
+              } else {
+                getNewQuestion();
+              }
+
+              // modal 팝업으로 기록이랑 다시하기, 나가기, 랭킹 화면 보여주기
+              //Navigator.pop(context);
               setState(() {});
             }
           }
