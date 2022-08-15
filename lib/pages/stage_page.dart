@@ -4,10 +4,12 @@ import '../problems/1-1.dart';
 
 // ignore: must_be_immutable
 class StagePage extends StatefulWidget {
-  late String type;
+  String type;
+  int digital;
 
   StagePage({
     required this.type,
+    required this.digital,
     Key? key,
   }) : super(key: key);
 
@@ -49,7 +51,7 @@ class _StagePageState extends State<StagePage> {
   }
 
   void getPlusQuestion() {
-    questions = PlusQuestion(count: 2, digital: 1).getQuestion();
+    questions = PlusQuestion(count: 2, digital: widget.digital).getQuestion();
     question = '';
     for (int i = 0; i < questions.length; i++) {
       question += questions[i].toString();
@@ -64,7 +66,7 @@ class _StagePageState extends State<StagePage> {
   }
 
   void getMinusQuestion() {
-    questions = MinusQuestion(count: 2, digital: 1).getQuestion();
+    questions = MinusQuestion(count: 2, digital: widget.digital).getQuestion();
     question = '';
     for (int i = 0; i < questions.length; i++) {
       question += questions[i].toString();
@@ -79,7 +81,7 @@ class _StagePageState extends State<StagePage> {
   }
 
   void getMultiQuestion() {
-    questions = MultiQuestion(count: 2, digital: 1).getQuestion();
+    questions = MultiQuestion(count: 2, digital: widget.digital).getQuestion();
     question = '';
     for (int i = 0; i < questions.length; i++) {
       question += questions[i].toString();
@@ -94,7 +96,7 @@ class _StagePageState extends State<StagePage> {
   }
 
   void getDivideQuestion() {
-    questions = DivideQuestion(count: 2, digital: 1).getQuestion();
+    questions = DivideQuestion(count: 2, digital: widget.digital).getQuestion();
     question = '';
     for (int i = 0; i < questions.length; i++) {
       question += questions[i].toString();
@@ -227,7 +229,7 @@ class _StagePageState extends State<StagePage> {
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
                       question,
-                      style: const TextStyle(fontSize: 40),
+                      style: const TextStyle(fontSize: 40, letterSpacing: 2),
                     ),
                   ),
                   Row(

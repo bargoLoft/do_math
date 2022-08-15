@@ -13,7 +13,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
   int typeIndex = 0;
+  int digitalIndex = 0;
+
   List type = ['+', '-', '×', '÷'];
+  double ratio = 4 / 3;
 
   void _onItemTapped(int index) {
     if (_selectedIndex != index) {
@@ -86,12 +89,24 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          buildTypeButton(context, '+', 1 / 1, 0, 40),
-                          buildTypeButton(context, '-', 1 / 1, 1, 40),
-                          buildTypeButton(context, '×', 1 / 1, 2, 40),
-                          buildTypeButton(context, '÷', 1 / 1, 3, 40),
+                          buildTypeButton(context, '+', ratio, 0, 30),
+                          buildTypeButton(context, '-', ratio, 1, 40),
+                          buildTypeButton(context, '×', ratio, 2, 30),
+                          buildTypeButton(context, '÷', ratio, 3, 30),
                         ],
                       )),
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        buildDigitalButton(context, '한 자리 수', ratio, 16, 0),
+                        buildDigitalButton(context, '두 자리 수', ratio, 16, 1),
+                        buildDigitalButton(context, '세 자리 수', ratio, 16, 2),
+                        buildDigitalButton(context, '네 자리 수', ratio, 16, 3),
+                      ],
+                    ),
+                  ),
                   Expanded(flex: 4, child: buildButton(context, '시작', 2 / 1, 50, type[typeIndex])),
                 ],
               ),
@@ -140,7 +155,7 @@ class _HomePageState extends State<HomePage> {
     String title,
     double ratio,
     int index, [
-    double textSize = 20,
+    double textSize = 30,
   ]) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -152,16 +167,17 @@ class _HomePageState extends State<HomePage> {
             setState(() {});
           },
           style: ButtonStyle(
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
             elevation: MaterialStateProperty.all(0),
             backgroundColor: MaterialStateProperty.all(Colors.white),
             foregroundColor: MaterialStateProperty.all(Colors.black),
             shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
           ),
           child: Text(
             title,
             style: TextStyle(
-              fontSize: (typeIndex == index) ? textSize : 20,
+              fontSize: (typeIndex == index) ? textSize : 25,
               color: (typeIndex == index) ? Colors.blue : Colors.grey,
             ),
           ),
@@ -169,34 +185,68 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
 
-Widget buildButton(context, String title, double ratio, [double textSize = 20, String type = '+']) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-    child: AspectRatio(
-      aspectRatio: ratio,
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => StagePage(
-                        type: type,
-                      )));
-        },
-        style: ButtonStyle(
-          elevation: MaterialStateProperty.all(0),
-          backgroundColor: MaterialStateProperty.all(Colors.white),
-          foregroundColor: MaterialStateProperty.all(Colors.black),
-          shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
-        ),
-        child: Text(
-          title,
-          style: TextStyle(fontSize: textSize),
+  Widget buildDigitalButton(context, String title, double ratio,
+      [double textSize = 20, int index = 0]) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: AspectRatio(
+        aspectRatio: ratio,
+        child: ElevatedButton(
+          onPressed: () {
+            digitalIndex = index;
+            setState(() {});
+          },
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            elevation: MaterialStateProperty.all(0),
+            backgroundColor: MaterialStateProperty.all(Colors.white),
+            foregroundColor: MaterialStateProperty.all(Colors.black),
+            shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+          ),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: (digitalIndex == index) ? textSize : 17,
+              color: (digitalIndex == index) ? Colors.blue : Colors.grey,
+            ),
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
+
+  Widget buildButton(context, String title, double ratio,
+      [double textSize = 20, String type = '+']) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: AspectRatio(
+        aspectRatio: ratio,
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StagePage(
+                          type: type,
+                          digital: digitalIndex + 1,
+                        )));
+          },
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            elevation: MaterialStateProperty.all(0),
+            backgroundColor: MaterialStateProperty.all(Colors.white),
+            foregroundColor: MaterialStateProperty.all(Colors.black),
+            shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+          ),
+          child: Text(
+            title,
+            style: TextStyle(fontSize: textSize),
+          ),
+        ),
+      ),
+    );
+  }
 }
