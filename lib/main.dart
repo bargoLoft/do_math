@@ -1,10 +1,25 @@
 import 'package:do_math/provider/questionProvider.dart';
+import 'package:do_math/provider/settingProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:do_math/pages/home_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // main에서 비동기 메소드 사용시 필요
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => QuestionProvider()),
+      ChangeNotifierProvider(
+          create: (context) => Setting(
+                (prefs.getBool('autoFocus')) ?? false,
+                (prefs.getBool('left')) ?? false,
+              )),
+    ], child: const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -13,16 +28,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (BuildContext context) => QuestionProvider())],
-      child: Consumer<QuestionProvider>(builder: (context, question, _) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: '두수앞',
-          theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'NanumSquare'),
-          home: const HomePage(title: '두수앞'),
-        );
-      }),
-    );
+    return Consumer<QuestionProvider>(builder: (context, question, _) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: '두수앞',
+        theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'NanumSquare'),
+        home: const HomePage(title: '두수앞'),
+      );
+    });
   }
 }

@@ -1,5 +1,9 @@
+import 'package:do_math/pages/setting_page.dart';
 import 'package:do_math/pages/stage_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -15,15 +19,127 @@ class _HomePageState extends State<HomePage> {
   int typeIndex = 0;
   int digitalIndex = 0;
 
+  bool _autoFocus = false;
+  bool _isLeftHanded = false;
+  //bool _method = true;
+  late SharedPreferences _prefs;
+
   List type = ['+', '-', '×', '÷'];
   double ratio = 4 / 3;
 
+  @override
+  void initState() {
+    _loadCounter();
+    super.initState();
+  }
+
   void _onItemTapped(int index) {
-    if (_selectedIndex != index) {
-      setState(() {
-        _selectedIndex = index;
-      });
+    if (index == 2) {
+      showBottomSheet(context);
     }
+
+    // if (_selectedIndex != index) {
+    //   setState(() {
+    //     _selectedIndex = index;
+    //   });
+    // }
+  }
+
+  _loadCounter() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _autoFocus = _prefs.getBool('autoFocus') ?? false;
+      _isLeftHanded = _prefs.getBool('left') ?? false;
+    });
+  }
+
+  void showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Consumer(
+                builder: (context, appModel, child) => Container(
+                  height: 230,
+                  color: Colors.white,
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '앱 시작시 바로 검색',
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                  CupertinoSwitch(
+                                    value: _autoFocus,
+                                    onChanged: <bool>(value) {
+                                      setState(() {
+                                        _autoFocus = value;
+                                        _prefs.setBool('autoFocus', _autoFocus);
+                                      });
+                                    },
+                                    activeColor: Theme.of(context).primaryColor,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '왼손잡이입니까?',
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                  CupertinoSwitch(
+                                    value: _isLeftHanded,
+                                    onChanged: <bool>(value) {
+                                      setState(() {
+                                        _isLeftHanded = value;
+                                        _prefs.setBool('left', _isLeftHanded);
+                                      });
+                                    },
+                                    activeColor: Theme.of(context).primaryColor,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                '설정 변경 후 앱을 재시작 해주세요',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.grey.shade400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          // style: ButtonStyle(
+                          //   foregroundColor:
+                          //       MaterialStateProperty.all(Theme.of(context).primaryColorDark),
+                          //   backgroundColor:
+                          //       MaterialStateProperty.all(Theme.of(context).primaryColor),
+                          //   shadowColor: MaterialStateProperty.all(Colors.transparent),
+                          // ),
+                          child: const Text('완료'),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 
   @override
@@ -31,7 +147,7 @@ class _HomePageState extends State<HomePage> {
     return IndexedStack(
       index: _selectedIndex,
       children: [
-        Text('hi'),
+        SettingPage(),
         Scaffold(
           resizeToAvoidBottomInset: true, // 키보드 밀려오는거 무시
           // appBar: AppBar(
