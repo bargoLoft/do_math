@@ -131,12 +131,12 @@ class _StagePageState extends State<StagePage> {
                       RichText(
                         text: TextSpan(
                           text: currentAnswer.toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 100,
                             color: Colors.blue,
                           ),
                           children: [
-                            TextSpan(
+                            const TextSpan(
                                 text: '/10',
                                 style: TextStyle(
                                   fontSize: 30,
@@ -154,7 +154,7 @@ class _StagePageState extends State<StagePage> {
                               Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
                               Navigator.pop(context);
                             },
-                            icon: Icon(Icons.home_rounded),
+                            icon: const Icon(Icons.home_rounded),
                           ),
                           IconButton(
                             iconSize: 60,
@@ -162,7 +162,7 @@ class _StagePageState extends State<StagePage> {
                               Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
                               refreshStage();
                             },
-                            icon: Icon(Icons.refresh_rounded),
+                            icon: const Icon(Icons.refresh_rounded),
                           ),
                           IconButton(
                             iconSize: 30,
@@ -170,7 +170,7 @@ class _StagePageState extends State<StagePage> {
                               Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
                               Navigator.pop(context);
                             },
-                            icon: Icon(Icons.leaderboard_rounded),
+                            icon: const Icon(Icons.leaderboard_rounded),
                           ),
                         ],
                       ),

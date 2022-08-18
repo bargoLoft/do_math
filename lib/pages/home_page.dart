@@ -1,4 +1,4 @@
-import 'package:do_math/pages/setting_page.dart';
+import 'package:do_math/pages/score_page.dart';
 import 'package:do_math/pages/stage_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   late SharedPreferences _prefs;
 
   List type = ['+', '-', '×', '÷'];
-  double ratio = 4 / 3;
+  double ratio = 6 / 5;
 
   @override
   void initState() {
@@ -34,14 +34,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onItemTapped(int index) {
+    if (index == 0) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+
     if (index == 2) {
       showBottomSheet(context);
     }
 
     // if (_selectedIndex != index) {
-    //   setState(() {
-    //     _selectedIndex = index;
-    //   });
+    //
     // }
   }
 
@@ -55,6 +59,12 @@ class _HomePageState extends State<HomePage> {
 
   void showBottomSheet(BuildContext context) {
     showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(15),
+          ),
+        ),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         context: context,
         builder: (context) {
           return StatefulBuilder(
@@ -123,13 +133,11 @@ class _HomePageState extends State<HomePage> {
                         ),
                         ElevatedButton(
                           onPressed: () => Navigator.pop(context),
-                          // style: ButtonStyle(
-                          //   foregroundColor:
-                          //       MaterialStateProperty.all(Theme.of(context).primaryColorDark),
-                          //   backgroundColor:
-                          //       MaterialStateProperty.all(Theme.of(context).primaryColor),
-                          //   shadowColor: MaterialStateProperty.all(Colors.transparent),
-                          // ),
+                          style: ButtonStyle(
+                            foregroundColor: MaterialStateProperty.all(Colors.blue),
+                            backgroundColor: MaterialStateProperty.all(Colors.white),
+                            shadowColor: MaterialStateProperty.all(Colors.transparent),
+                          ),
                           child: const Text('완료'),
                         )
                       ],
@@ -147,7 +155,9 @@ class _HomePageState extends State<HomePage> {
     return IndexedStack(
       index: _selectedIndex,
       children: [
-        SettingPage(),
+        ScorePage(
+          selectedIndex: _selectedIndex,
+        ), // ranking page로 변경
         Scaffold(
           resizeToAvoidBottomInset: true, // 키보드 밀려오는거 무시
           // appBar: AppBar(
@@ -211,15 +221,18 @@ class _HomePageState extends State<HomePage> {
                           buildTypeButton(context, '÷', ratio, 3, 30),
                         ],
                       )),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   Expanded(
                     flex: 1,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        buildDigitalButton(context, '한 자리 수', ratio, 16, 0),
-                        buildDigitalButton(context, '두 자리 수', ratio, 16, 1),
-                        buildDigitalButton(context, '세 자리 수', ratio, 16, 2),
-                        buildDigitalButton(context, '네 자리 수', ratio, 16, 3),
+                        buildDigitalButton(context, '한 자리 수', ratio, 15, 0),
+                        buildDigitalButton(context, '두 자리 수', ratio, 15, 1),
+                        buildDigitalButton(context, '세 자리 수', ratio, 15, 2),
+                        buildDigitalButton(context, '네 자리 수', ratio, 15, 3),
                       ],
                     ),
                   ),
@@ -252,6 +265,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
+        //ScorePage(),
       ],
     );
   }
@@ -274,7 +288,7 @@ class _HomePageState extends State<HomePage> {
     double textSize = 30,
   ]) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       child: AspectRatio(
         aspectRatio: ratio,
         child: ElevatedButton(
@@ -293,7 +307,8 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             title,
             style: TextStyle(
-              fontSize: (typeIndex == index) ? textSize : 25,
+              fontSize: textSize,
+              //fontSize: (typeIndex == index) ? textSize : 30,
               color: (typeIndex == index) ? Colors.blue : Colors.grey,
             ),
           ),
@@ -303,9 +318,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildDigitalButton(context, String title, double ratio,
-      [double textSize = 20, int index = 0]) {
+      [double textSize = 15, int index = 0]) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       child: AspectRatio(
         aspectRatio: ratio,
         child: ElevatedButton(
@@ -324,7 +339,7 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             title,
             style: TextStyle(
-              fontSize: (digitalIndex == index) ? textSize : 17,
+              fontSize: (digitalIndex == index) ? textSize : 15,
               color: (digitalIndex == index) ? Colors.blue : Colors.grey,
             ),
           ),
