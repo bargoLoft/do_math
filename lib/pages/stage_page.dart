@@ -53,6 +53,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     if (_countController.isAnimating || _countController.isCompleted) {
       _countController.dispose();
     }
+    timer?.cancel();
     super.dispose();
   }
 

@@ -356,6 +356,7 @@ class _HomePageState extends State<HomePage> {
         aspectRatio: ratio,
         child: ElevatedButton(
           onPressed: () {
+            //await으로 맞춘개수, 걸린 시간, 문제 유형 받아와서 기록.
             Navigator.push(
                 context,
                 MaterialPageRoute(
