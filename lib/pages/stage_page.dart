@@ -72,6 +72,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     currentNumber = 0;
     currentAnswer = 0;
     duration = const Duration(seconds: 0);
+    timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
     getNewQuestion();
     _countController.forward();
     setState(() {});
@@ -85,6 +86,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     if (OX) currentAnswer++;
     if (currentNumber == 10) {
       _countController.stop();
+      timer?.cancel();
       showResultPopup();
     } else {
       getNewQuestion();
