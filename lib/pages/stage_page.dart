@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:do_math/const/const.dart';
 import 'package:do_math/problems/1-1.dart';
 import 'package:do_math/widgets/count_down.dart';
@@ -21,7 +23,7 @@ class StagePage extends StatefulWidget {
 
 class _StagePageState extends State<StagePage> with SingleTickerProviderStateMixin {
   final _textController = TextEditingController();
-  late AnimationController _controller;
+  late AnimationController _countController;
 
   late List<int> questions;
   String question = '';
@@ -29,39 +31,60 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
   int currentNumber = 0;
   int currentAnswer = 0;
 
+  Duration duration = Duration();
+  Timer? timer;
+
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(seconds: limitTime));
-    _controller.addListener(() {
-      if (_controller.isCompleted) {
-        Next();
+    startTimer();
+    _countController = AnimationController(vsync: this, duration: Duration(seconds: limitTime));
+    _countController.addListener(() {
+      if (_countController.isCompleted) {
+        Next(false);
       }
     });
-    _controller.forward();
+    _countController.forward();
     getNewQuestion();
   }
 
   @override
   void dispose() {
-    if (_controller.isAnimating || _controller.isCompleted) _controller.dispose();
+    if (_countController.isAnimating || _countController.isCompleted) {
+      _countController.dispose();
+    }
     super.dispose();
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
+  }
+
+  void addTime() {
+    const addSeconds = 1;
+    setState(() {
+      final seconds = duration.inSeconds + addSeconds;
+      duration = Duration(seconds: seconds);
+    });
   }
 
   void refreshStage() {
     currentNumber = 0;
     currentAnswer = 0;
+    duration = const Duration(seconds: 0);
     getNewQuestion();
+    _countController.forward();
     setState(() {});
   }
 
-  void Next() {
+  void Next(bool OX) {
     _textController.clear();
-    _controller.reset();
-    _controller.forward();
+    _countController.reset();
+    _countController.forward();
     currentNumber += 1;
-    currentAnswer += 1;
+    if (OX) currentAnswer++;
     if (currentNumber == 10) {
+      _countController.stop();
       showResultPopup();
     } else {
       getNewQuestion();
@@ -164,9 +187,9 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                       RichText(
                         text: TextSpan(
                           text: currentAnswer.toString(),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 100,
-                            color: Colors.blue,
+                            color: currentAnswer >= 4 ? Colors.blue : Colors.red,
                           ),
                           children: const [
                             TextSpan(
@@ -178,12 +201,16 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                           ],
                         ),
                       ),
+                      Text(
+                          '걸린 시간 : ${duration.inMinutes.toString().padLeft(2, '0')}\'${duration.inSeconds.toString().padLeft(2, '0')}\'\'${(duration.inMicroseconds ~/ 1000).toString().padLeft(2, '0')}'),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           IconButton(
                             iconSize: 40,
                             onPressed: () {
+                              _countController.dispose();
+                              timer?.cancel();
                               Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
                               Navigator.pop(context);
                             },
@@ -250,7 +277,8 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                   height: 2,
                   color: Colors.green,
                 ),
-                Countdown(animation: StepTween(begin: limitTime, end: 0).animate(_controller)),
+                Countdown(animation: StepTween(begin: limitTime, end: 0).animate(_countController)),
+                Text('${duration.inSeconds}'),
               ],
             ),
             Expanded(
@@ -366,7 +394,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
           } else if (num != '←') {
             _textController.text += num;
             if (_textController.text == answer.toString()) {
-              Next();
+              Next(true);
             }
           }
         },
