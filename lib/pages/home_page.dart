@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             top: Radius.circular(15),
           ),
         ),
-        clipBehavior: Clip.antiAliasWithSaveLayer,
+        clipBehavior: Clip.hardEdge,
         context: context,
         builder: (context) {
           return StatefulBuilder(

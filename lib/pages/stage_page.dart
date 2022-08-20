@@ -1,4 +1,6 @@
+import 'package:do_math/const/const.dart';
 import 'package:do_math/problems/1-1.dart';
+import 'package:do_math/widgets/count_down.dart';
 import 'package:flutter/material.dart';
 import '../problems/1-1.dart';
 
@@ -17,8 +19,10 @@ class StagePage extends StatefulWidget {
   State<StagePage> createState() => _StagePageState();
 }
 
-class _StagePageState extends State<StagePage> {
+class _StagePageState extends State<StagePage> with SingleTickerProviderStateMixin {
   final _textController = TextEditingController();
+  late AnimationController _controller;
+
   late List<int> questions;
   String question = '';
   late int answer;
@@ -28,13 +32,42 @@ class _StagePageState extends State<StagePage> {
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(vsync: this, duration: Duration(seconds: limitTime));
+    _controller.addListener(() {
+      if (_controller.isCompleted) {
+        Next();
+      }
+    });
+    _controller.forward();
     getNewQuestion();
+  }
+
+  @override
+  void dispose() {
+    if (_controller.isAnimating || _controller.isCompleted) _controller.dispose();
+    super.dispose();
   }
 
   void refreshStage() {
     currentNumber = 0;
     currentAnswer = 0;
     getNewQuestion();
+    setState(() {});
+  }
+
+  void Next() {
+    _textController.clear();
+    _controller.reset();
+    _controller.forward();
+    currentNumber += 1;
+    currentAnswer += 1;
+    if (currentNumber == 10) {
+      showResultPopup();
+    } else {
+      getNewQuestion();
+    }
+    // modal 팝업으로 기록이랑 다시하기, 나가기, 랭킹 화면 보여주기
+    //Navigator.pop(context);
     setState(() {});
   }
 
@@ -135,8 +168,8 @@ class _StagePageState extends State<StagePage> {
                             fontSize: 100,
                             color: Colors.blue,
                           ),
-                          children: [
-                            const TextSpan(
+                          children: const [
+                            TextSpan(
                                 text: '/10',
                                 style: TextStyle(
                                   fontSize: 30,
@@ -216,7 +249,8 @@ class _StagePageState extends State<StagePage> {
                   width: (MediaQuery.of(context).size.width) * 0.1 * currentNumber,
                   height: 2,
                   color: Colors.green,
-                )
+                ),
+                Countdown(animation: StepTween(begin: limitTime, end: 0).animate(_controller)),
               ],
             ),
             Expanded(
@@ -332,18 +366,7 @@ class _StagePageState extends State<StagePage> {
           } else if (num != '←') {
             _textController.text += num;
             if (_textController.text == answer.toString()) {
-              _textController.clear();
-              currentNumber += 1;
-              currentAnswer += 1;
-              if (currentNumber == 10) {
-                showResultPopup();
-              } else {
-                getNewQuestion();
-              }
-
-              // modal 팝업으로 기록이랑 다시하기, 나가기, 랭킹 화면 보여주기
-              //Navigator.pop(context);
-              setState(() {});
+              Next();
             }
           }
         },

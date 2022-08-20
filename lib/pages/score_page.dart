@@ -5,10 +5,24 @@ class ScorePage extends StatelessWidget {
 
   ScorePage({required this.selectedIndex, Key? key}) : super(key: key);
 
+  void _onItemTapped(int index) {
+    if (index == 0 || index == 1) {
+      selectedIndex = index;
+    }
+
+    if (index == 2) {
+      //showBottomSheet(context);
+    }
+
+    // if (_selectedIndex != index) {
+    //
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Text('hi'),
+        body: Center(child: Text('hi')),
         bottomNavigationBar: SizedBox(
           height: MediaQuery.of(context).size.height * 0.1,
           child: BottomNavigationBar(
