@@ -1,4 +1,4 @@
-import 'package:do_math/pages/score_page.dart';
+import 'package:do_math/pages/record_page.dart';
 import 'package:do_math/pages/stage_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
     return IndexedStack(
       index: _selectedIndex,
       children: [
-        ScorePage(
+        RecordPage(
           selectedIndex: _selectedIndex,
         ), // ranking page로 변경
         Scaffold(

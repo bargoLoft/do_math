@@ -4,6 +4,7 @@ import 'package:do_math/const/const.dart';
 import 'package:do_math/problems/1-1.dart';
 import 'package:do_math/widgets/count_down.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import '../problems/1-1.dart';
 
 // ignore: must_be_immutable
@@ -41,7 +42,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     _countController = AnimationController(vsync: this, duration: Duration(seconds: limitTime));
     _countController.addListener(() {
       if (_countController.isCompleted) {
-        Next(false);
+        next(false);
       }
     });
     _countController.forward();
@@ -79,15 +80,18 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     setState(() {});
   }
 
-  void Next(bool OX) {
+  Future<void> next(bool oX) async {
     _textController.clear();
     _countController.reset();
     _countController.forward();
     currentNumber += 1;
-    if (OX) currentAnswer++;
+    if (oX) currentAnswer++;
     if (currentNumber == 10) {
       _countController.stop();
       timer?.cancel();
+      //hive에 결과 저장.
+      var box = await Hive.openBox('record');
+
       showResultPopup();
     } else {
       getNewQuestion();
@@ -205,7 +209,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                         ),
                       ),
                       Text(
-                          '걸린 시간 : ${duration.inMinutes.toString().padLeft(2, '0')}\'${duration.inSeconds.toString().padLeft(2, '0')}\'\'${(duration.inMicroseconds ~/ 1000).toString().padLeft(2, '0')}'),
+                          '걸린 시간 : ${duration.inMinutes.toString().padLeft(2, '0')}\'${(duration.inSeconds % 60).toString().padLeft(2, '0')}\'\''),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -397,7 +401,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
           } else if (num != '←') {
             _textController.text += num;
             if (_textController.text == answer.toString()) {
-              Next(true);
+              next(true);
             }
           }
         },

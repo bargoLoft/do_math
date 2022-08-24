@@ -1,9 +1,12 @@
+import 'package:do_math/models/record.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-class ScorePage extends StatelessWidget {
+class RecordPage extends StatelessWidget {
   int selectedIndex;
 
-  ScorePage({required this.selectedIndex, Key? key}) : super(key: key);
+  RecordPage({required this.selectedIndex, Key? key}) : super(key: key);
 
   void _onItemTapped(int index) {
     if (index == 0 || index == 1) {
@@ -21,8 +24,17 @@ class ScorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ValueListenable Builder로 Hive값 받아오기.
     return Scaffold(
-        body: Center(child: Text('hi')),
+        body: ValueListenableBuilder(
+            valueListenable: Hive.box<Record>('record').listenable(),
+            builder: (context, record, _) {
+              return Center(
+                child: Column(
+                  children: [Text('hi')],
+                ),
+              );
+            }),
         bottomNavigationBar: SizedBox(
           height: MediaQuery.of(context).size.height * 0.1,
           child: BottomNavigationBar(
