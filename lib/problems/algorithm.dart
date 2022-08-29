@@ -3,7 +3,7 @@ import 'dart:math';
 
 class PlusQuestion {
   int count;
-  int digital;
+  List digital;
   PlusQuestion({required this.digital, required this.count});
 
   List<int> getQuestion() {
@@ -12,16 +12,16 @@ class PlusQuestion {
 
     List<int> num1 = List.generate(
         count,
-        (_) =>
-            rng.nextInt(((pow(10, digital) - pow(10, digital - 1)).toInt())) +
-            pow(10, digital - 1).toInt());
+        (int i) =>
+            rng.nextInt(((pow(10, digital[i]) - pow(10, digital[i] - 1)).toInt())) +
+            pow(10, digital[i] - 1).toInt());
     return num1;
   }
 }
 
 class MinusQuestion {
   int count;
-  int digital;
+  List digital;
   MinusQuestion({required this.digital, required this.count});
 
   List<int> getQuestion() {
@@ -30,9 +30,9 @@ class MinusQuestion {
 
     List<int> num1 = List.generate(
         count,
-        (_) =>
-            rng.nextInt(((pow(10, digital) - pow(10, digital - 1)).toInt())) +
-            pow(10, digital - 1).toInt());
+        (int i) =>
+            rng.nextInt(((pow(10, digital[i]) - pow(10, digital[i] - 1)).toInt())) +
+            pow(10, digital[i] - 1).toInt());
     num1.sort();
     return num1.reversed.toList();
   }
@@ -40,7 +40,7 @@ class MinusQuestion {
 
 class MultiQuestion {
   int count;
-  int digital;
+  List digital;
   MultiQuestion({required this.digital, required this.count});
 
   List<int> getQuestion() {
@@ -49,16 +49,16 @@ class MultiQuestion {
 
     List<int> num1 = List.generate(
         count,
-        (_) =>
-            rng.nextInt(((pow(10, digital) - pow(10, digital - 1)).toInt())) +
-            pow(10, digital - 1).toInt());
+        (int i) =>
+            rng.nextInt(((pow(10, digital[i]) - pow(10, digital[i] - 1)).toInt())) +
+            pow(10, digital[i] - 1).toInt());
     return num1;
   }
 }
 
 class DivideQuestion {
   int count;
-  int digital;
+  List digital;
   DivideQuestion({required this.digital, required this.count});
 
   List<int> getQuestion() {
@@ -67,9 +67,9 @@ class DivideQuestion {
 
     List<int> num1 = List.generate(
         count,
-        (_) =>
-            rng.nextInt(((pow(10, digital) - pow(10, digital - 1)).toInt())) +
-            pow(10, digital - 1).toInt());
+        (int i) =>
+            rng.nextInt(((pow(10, digital[i]) - pow(10, digital[i] - 1)).toInt())) +
+            pow(10, digital[i] - 1).toInt());
     int sum = num1.fold(1, (total, element) => total * element);
     num1.add(sum);
     num1 = num1.reversed.toList();

@@ -17,7 +17,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
   int typeIndex = 0;
-  int digitalIndex = 0;
+  int digitalIndex_1 = 0;
+  int digitalIndex_2 = 0;
 
   bool _autoFocus = false;
   bool _isLeftHanded = false;
@@ -211,6 +212,18 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        buildDigitalButton(context, '한 자리 수', ratio, 15, 0),
+                        buildDigitalButton(context, '두 자리 수', ratio, 15, 1),
+                        buildDigitalButton(context, '세 자리 수', ratio, 15, 2),
+                        buildDigitalButton(context, '네 자리 수', ratio, 15, 3),
+                      ],
+                    ),
+                  ),
+                  Expanded(
                       flex: 1,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -229,10 +242,10 @@ class _HomePageState extends State<HomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        buildDigitalButton(context, '한 자리 수', ratio, 15, 0),
-                        buildDigitalButton(context, '두 자리 수', ratio, 15, 1),
-                        buildDigitalButton(context, '세 자리 수', ratio, 15, 2),
-                        buildDigitalButton(context, '네 자리 수', ratio, 15, 3),
+                        buildDigitalButton2(context, '한 자리 수', ratio, 15, 0),
+                        buildDigitalButton2(context, '두 자리 수', ratio, 15, 1),
+                        buildDigitalButton2(context, '세 자리 수', ratio, 15, 2),
+                        buildDigitalButton2(context, '네 자리 수', ratio, 15, 3),
                       ],
                     ),
                   ),
@@ -325,7 +338,7 @@ class _HomePageState extends State<HomePage> {
         aspectRatio: ratio,
         child: ElevatedButton(
           onPressed: () {
-            digitalIndex = index;
+            digitalIndex_1 = index;
             setState(() {});
           },
           style: ButtonStyle(
@@ -339,8 +352,39 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             title,
             style: TextStyle(
-              fontSize: (digitalIndex == index) ? textSize : 15,
-              color: (digitalIndex == index) ? Colors.blue : Colors.grey,
+              fontSize: (digitalIndex_1 == index) ? textSize : 15,
+              color: (digitalIndex_1 == index) ? Colors.blue : Colors.grey,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildDigitalButton2(context, String title, double ratio,
+      [double textSize = 15, int index = 0]) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      child: AspectRatio(
+        aspectRatio: ratio,
+        child: ElevatedButton(
+          onPressed: () {
+            digitalIndex_2 = index;
+            setState(() {});
+          },
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            elevation: MaterialStateProperty.all(0),
+            backgroundColor: MaterialStateProperty.all(Colors.white),
+            foregroundColor: MaterialStateProperty.all(Colors.black),
+            shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+          ),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: (digitalIndex_2 == index) ? textSize : 15,
+              color: (digitalIndex_2 == index) ? Colors.blue : Colors.grey,
             ),
           ),
         ),
@@ -362,7 +406,8 @@ class _HomePageState extends State<HomePage> {
                 MaterialPageRoute(
                     builder: (context) => StagePage(
                           type: type,
-                          digital: digitalIndex + 1,
+                          digital: [digitalIndex_1 + 1, digitalIndex_2 + 1],
+                          count: 2,
                         )));
           },
           style: ButtonStyle(

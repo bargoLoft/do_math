@@ -14,9 +14,9 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await Hive.initFlutter();
   Hive.registerAdapter(RecordAdapter());
-  await Hive.openBox('record');
+  await Hive.openBox<Record>('record');
 
-  //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  //SystemChrome.setPreferredOrierntations([DeviceOrientation.portraitUp]);
 
   runApp(
     MultiProvider(providers: [

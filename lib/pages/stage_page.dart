@@ -1,20 +1,23 @@
 import 'dart:async';
 
 import 'package:do_math/const/const.dart';
-import 'package:do_math/problems/1-1.dart';
+import 'package:do_math/models/record.dart';
+import 'package:do_math/problems/algorithm.dart';
 import 'package:do_math/widgets/count_down.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import '../problems/1-1.dart';
+import '../problems/algorithm.dart';
 
 // ignore: must_be_immutable
 class StagePage extends StatefulWidget {
   String type;
-  int digital;
+  int count;
+  List digital;
 
   StagePage({
     required this.type,
     required this.digital,
+    required this.count,
     Key? key,
   }) : super(key: key);
 
@@ -89,8 +92,13 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     if (currentNumber == 10) {
       _countController.stop();
       timer?.cancel();
+
       //hive에 결과 저장.
-      var box = await Hive.openBox('record');
+      //횟수는 ++;
+      //duratoin 총 시간.(초)
+      //currentAnswer 맞은 개수.
+      var box = await Hive.openBox<Record>('record');
+      //box.put('${widget.type}${widget.digital}', value)
 
       showResultPopup();
     } else {
@@ -312,7 +320,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                       ),
                       SizedBox(
                         height: 60,
-                        width: 150,
+                        width: answer.toString().length * 30 + 15,
                         child: TextField(
                           enabled: false,
                           controller: _textController,
@@ -325,6 +333,8 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                           //maxLength: 10,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
+                            isDense: true,
+                            contentPadding: EdgeInsets.all(10),
                           ),
                           style: const TextStyle(
                             fontSize: 40,
