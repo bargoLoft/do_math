@@ -35,7 +35,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
   int currentNumber = 0;
   int currentAnswer = 0;
 
-  Duration duration = Duration();
+  Duration duration = const Duration();
   Timer? timer;
 
   @override
@@ -62,7 +62,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
   }
 
   void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
+    timer = Timer.periodic(const Duration(milliseconds: 10), (_) => addTime());
   }
 
   void addTime() {
@@ -77,7 +77,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     currentNumber = 0;
     currentAnswer = 0;
     duration = const Duration(seconds: 0);
-    timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
+    timer = Timer.periodic(const Duration(milliseconds: 10), (_) => addTime());
     getNewQuestion();
     _countController.forward();
     setState(() {});
@@ -97,9 +97,19 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
       //횟수는 ++;
       //duratoin 총 시간.(초)
       //currentAnswer 맞은 개수.
+      //Hive.registerAdapter(RecordAdapter());
       var box = await Hive.openBox<Record>('record');
-      //box.put('${widget.type}${widget.digital}', value)
-
+      Record? record = box.get(
+        '${widget.type}${widget.digital}',
+        defaultValue: Record('${widget.type}${widget.digital}', 0, 0, 1000.0),
+      );
+      record?.playCount += 1;
+      record?.correct += currentAnswer;
+      if (duration.inSeconds / 100 < record!.highScore) {
+        record.highScore = duration.inSeconds / 100;
+      }
+      box.put('${widget.type}${widget.digital}', record);
+      print('${record.name}/${record.playCount}/${record.correct}/${record.highScore}');
       showResultPopup();
     } else {
       getNewQuestion();
@@ -216,8 +226,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                           ],
                         ),
                       ),
-                      Text(
-                          '걸린 시간 : ${duration.inMinutes.toString().padLeft(2, '0')}\'${(duration.inSeconds % 60).toString().padLeft(2, '0')}\'\''),
+                      Text('걸린 시간 : ${(duration.inSeconds / 100).toString().padLeft(2, '0')}s'),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -298,8 +307,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
             ),
             Expanded(
               flex: 4,
-              child: Center(
-                  child: Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
@@ -319,22 +327,23 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                         style: TextStyle(fontSize: 40),
                       ),
                       SizedBox(
-                        height: 60,
+                        //height: 70,
                         width: answer.toString().length * 30 + 15,
                         child: TextField(
                           enabled: false,
                           controller: _textController,
                           maxLines: 1,
+                          //maxLength: answer.toString().length,
                           //textAlign: TextAlign.center,
                           textAlign: TextAlign.center,
                           textAlignVertical: TextAlignVertical.center,
                           //expands: true,
                           //textCapitalization: TextCapitalization.words,
-                          //maxLength: 10,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             isDense: true,
-                            contentPadding: EdgeInsets.all(10),
+                            contentPadding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                            //counterText: '',
                           ),
                           style: const TextStyle(
                             fontSize: 40,
@@ -348,7 +357,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                     ],
                   ),
                 ],
-              )),
+              ),
             ),
             Expanded(
               flex: 4,
@@ -408,7 +417,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                 _textController.text.substring(0, _textController.text.length - 1);
           } else if (num == 'C') {
             _textController.clear();
-          } else if (num != '←') {
+          } else if (num != '←' && _textController.text.length < answer.toString().length) {
             _textController.text += num;
             if (_textController.text == answer.toString()) {
               next(true);

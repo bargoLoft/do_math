@@ -301,7 +301,7 @@ class _HomePageState extends State<HomePage> {
     double textSize = 30,
   ]) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
       child: AspectRatio(
         aspectRatio: ratio,
         child: ElevatedButton(
@@ -333,7 +333,7 @@ class _HomePageState extends State<HomePage> {
   Widget buildDigitalButton(context, String title, double ratio,
       [double textSize = 15, int index = 0]) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
       child: AspectRatio(
         aspectRatio: ratio,
         child: ElevatedButton(
@@ -364,7 +364,7 @@ class _HomePageState extends State<HomePage> {
   Widget buildDigitalButton2(context, String title, double ratio,
       [double textSize = 15, int index = 0]) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
       child: AspectRatio(
         aspectRatio: ratio,
         child: ElevatedButton(
@@ -395,7 +395,7 @@ class _HomePageState extends State<HomePage> {
   Widget buildButton(context, String title, double ratio,
       [double textSize = 20, String type = '+']) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
       child: AspectRatio(
         aspectRatio: ratio,
         child: ElevatedButton(
