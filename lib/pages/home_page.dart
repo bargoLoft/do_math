@@ -2,6 +2,7 @@ import 'package:do_math/pages/record_page.dart';
 import 'package:do_math/pages/stage_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,6 +17,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
+  DateTime? currentBackPressTime;
+
   int typeIndex = 0;
   int digitalIndex_1 = 0;
   int digitalIndex_2 = 0;
@@ -34,20 +37,35 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      Fluttertoast.showToast(
+        msg: "'뒤로' 버튼을 한번 더 누르시면 종료됩니다.",
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.white,
+        textColor: Theme.of(context).primaryColorDark,
+        fontSize: 12.0,
+        toastLength: Toast.LENGTH_SHORT,
+        timeInSecForIosWeb: 1,
+        webShowClose: false,
+      );
+      return false;
+    }
+    return true;
+  }
+
   void _onItemTapped(int index) {
-    if (index == 0) {
+    if (index == 0 || index == 1) {
       setState(() {
         _selectedIndex = index;
       });
     }
-
     if (index == 2) {
       showBottomSheet(context);
     }
-
-    // if (_selectedIndex != index) {
-    //
-    // }
   }
 
   _loadCounter() async {
@@ -153,40 +171,33 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return IndexedStack(
-      index: _selectedIndex,
-      children: [
-        RecordPage(
-          selectedIndex: _selectedIndex,
-        ), // ranking page로 변경
-        Scaffold(
-          resizeToAvoidBottomInset: true, // 키보드 밀려오는거 무시
-          // appBar: AppBar(
-          //   backgroundColor: _selectedIndex >= 0 ? Theme.of(context).primaryColor : Colors.white,
-          //   elevation: 0.0,
-          //   toolbarHeight: 0.0, // Hide the AppBar
-          // ),
-          backgroundColor: Colors.grey.shade100,
-          appBar: AppBar(
-            title: Text(
-              widget.title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 4,
-              ),
-            ),
-            actions: const [
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Icon(Icons.account_balance_outlined),
-              ),
-            ],
-            backgroundColor: Colors.grey.shade100,
-            foregroundColor: Colors.black,
-            elevation: 0,
+    return Scaffold(
+      backgroundColor: Colors.grey.shade100,
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 4,
           ),
-          body: SafeArea(
+        ),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Icon(Icons.account_balance_outlined),
+          ),
+        ],
+        backgroundColor: Colors.grey.shade100,
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          RecordPage(), // ranking page로 변경
+          SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: Column(
@@ -254,32 +265,32 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          bottomNavigationBar: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.1,
-            child: BottomNavigationBar(
-              iconSize: 23,
-              items: <BottomNavigationBarItem>[
-                buildBottomNavigationBarItem(icon: const Icon(Icons.leaderboard), label: 'home'),
-                buildBottomNavigationBarItem(icon: const Icon(Icons.home_filled), label: 'storage'),
-                buildBottomNavigationBarItem(icon: const Icon(Icons.settings), label: 'write'),
-              ],
-              currentIndex: _selectedIndex,
-              selectedItemColor: Theme.of(context).primaryColorDark,
-              unselectedItemColor: Colors.black26,
-              selectedFontSize: 3.0,
-              unselectedFontSize: 3.0,
-              onTap: _onItemTapped,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              type: BottomNavigationBarType.fixed,
-              elevation: 0,
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.0),
-              //landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
-            ),
-          ),
+          //ScorePage(),
+        ],
+      ),
+      bottomNavigationBar: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.1,
+        child: BottomNavigationBar(
+          iconSize: 23,
+          items: <BottomNavigationBarItem>[
+            buildBottomNavigationBarItem(icon: const Icon(Icons.leaderboard), label: 'home'),
+            buildBottomNavigationBarItem(icon: const Icon(Icons.home_filled), label: 'storage'),
+            buildBottomNavigationBarItem(icon: const Icon(Icons.settings), label: 'write'),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Theme.of(context).primaryColorDark,
+          unselectedItemColor: Colors.black26,
+          selectedFontSize: 3.0,
+          unselectedFontSize: 3.0,
+          onTap: _onItemTapped,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          type: BottomNavigationBarType.fixed,
+          elevation: 0,
+          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.0),
+          //landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
         ),
-        //ScorePage(),
-      ],
+      ),
     );
   }
 
