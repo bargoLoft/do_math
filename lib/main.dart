@@ -1,8 +1,8 @@
 import 'package:do_math/models/record.dart';
-import 'package:do_math/provider/questionProvider.dart';
 import 'package:do_math/provider/settingProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:do_math/pages/home_page.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:provider/provider.dart';
@@ -14,8 +14,7 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(RecordAdapter());
   await Hive.openBox<Record>('record');
-
-  //SystemChrome.setPreferredOrierntations([DeviceOrientation.portraitUp]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   runApp(
     MultiProvider(providers: [
