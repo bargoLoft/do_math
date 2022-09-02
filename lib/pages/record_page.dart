@@ -32,11 +32,13 @@ class _RecordPageState extends State<RecordPage> {
                   itemCount: records.length,
                   itemBuilder: (context, int index) {
                     var recordData = records[index];
+                    var percent = 10 * (recordData.correct / recordData.playCount);
                     if (recordData.name == 'total') {
                       return Text(
                           '총..${recordData.playCount}번.. 맞춘문제 ${recordData.correct}개..경험치 ${recordData.highScore.toInt()}..');
                     } else {
-                      return Text('${recordData.name}${recordData.playCount}');
+                      return Text(
+                          '${recordData.name} / 시도 : ${recordData.playCount} / 정답률 : ${percent.toInt()}% / 최고 기록 : ${recordData.highScore}s');
                     }
                   }),
               // Text('${totalcord?.name}${totalcord?.playCount}'),

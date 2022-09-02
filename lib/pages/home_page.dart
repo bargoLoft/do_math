@@ -6,6 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../const/const.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
 
@@ -227,10 +229,10 @@ class _HomePageState extends State<HomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        buildDigitalButton(context, '한 자리 수', ratio, 15, 0),
-                        buildDigitalButton(context, '두 자리 수', ratio, 15, 1),
-                        buildDigitalButton(context, '세 자리 수', ratio, 15, 2),
-                        buildDigitalButton(context, '네 자리 수', ratio, 15, 3),
+                        buildDigitalButton(context, '한 자리 수', ratio, textSize, 0),
+                        buildDigitalButton(context, '두 자리 수', ratio, textSize, 1),
+                        buildDigitalButton(context, '세 자리 수', ratio, textSize, 2),
+                        buildDigitalButton(context, '네 자리 수', ratio, textSize, 3),
                       ],
                     ),
                   ),
@@ -253,10 +255,10 @@ class _HomePageState extends State<HomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        buildDigitalButton2(context, '한 자리 수', ratio, 15, 0),
-                        buildDigitalButton2(context, '두 자리 수', ratio, 15, 1),
-                        buildDigitalButton2(context, '세 자리 수', ratio, 15, 2),
-                        buildDigitalButton2(context, '네 자리 수', ratio, 15, 3),
+                        buildDigitalButton2(context, '한 자리 수', ratio, textSize, 0),
+                        buildDigitalButton2(context, '두 자리 수', ratio, textSize, 1),
+                        buildDigitalButton2(context, '세 자리 수', ratio, textSize, 2),
+                        buildDigitalButton2(context, '네 자리 수', ratio, textSize, 3),
                       ],
                     ),
                   ),
@@ -363,7 +365,8 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             title,
             style: TextStyle(
-              fontSize: (digitalIndex_1 == index) ? textSize : 15,
+              fontSize: textSize,
+              //fontSize: (digitalIndex_1 == index) ? textSize : 15,
               color: (digitalIndex_1 == index) ? Colors.blue : Colors.grey,
             ),
           ),
@@ -394,7 +397,8 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             title,
             style: TextStyle(
-              fontSize: (digitalIndex_2 == index) ? textSize : 15,
+              fontSize: textSize,
+              //fontSize: (digitalIndex_2 == index) ? textSize : 15,
               color: (digitalIndex_2 == index) ? Colors.blue : Colors.grey,
             ),
           ),
