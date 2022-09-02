@@ -4,7 +4,6 @@ import 'package:do_math/provider/settingProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:do_math/pages/home_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hive/hive.dart';
 
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +19,7 @@ void main() async {
 
   runApp(
     MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => QuestionProvider()),
+      //ChangeNotifierProvider(create: (context) => QuestionProvider()),
       ChangeNotifierProvider(
           create: (context) => Setting(
                 (prefs.getBool('autoFocus')) ?? false,
@@ -36,13 +35,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Consumer<QuestionProvider>(builder: (context, question, _) {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: '두수앞',
-        theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'NanumSquare'),
-        home: const HomePage(title: '두수앞'),
-      );
-    });
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: '두수앞',
+      theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'NanumSquare'),
+      home: const HomePage(title: '두수앞'),
+    );
   }
 }

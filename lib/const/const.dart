@@ -1,1 +1,1 @@
-final limitTime = 11; // seconds
+const limitTime = 11; // seconds

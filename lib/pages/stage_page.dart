@@ -42,7 +42,8 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     startTimer();
-    _countController = AnimationController(vsync: this, duration: Duration(seconds: limitTime));
+    _countController =
+        AnimationController(vsync: this, duration: const Duration(seconds: limitTime));
     _countController.addListener(() {
       if (_countController.isCompleted) {
         next(false);
@@ -90,9 +91,9 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     currentNumber += 1;
     if (oX) currentAnswer++;
     if (currentNumber == 10) {
+      // 문제 다 풀면.
       _countController.stop();
       timer?.cancel();
-
       //hive에 결과 저장.
       //횟수는 ++;
       //duratoin 총 시간.(초)
@@ -103,13 +104,26 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
         '${widget.type}${widget.digital}',
         defaultValue: Record('${widget.type}${widget.digital}', 0, 0, 1000.0),
       );
+      Record? totalRecord = box.get(
+        'total',
+        defaultValue: Record('total', 0, 0, 0),
+      );
+      totalRecord?.playCount += 1;
+      totalRecord?.correct += currentAnswer;
+      totalRecord?.highScore += widget.digital.reduce((value, element) => value + element) *
+          currentAnswer; // 경험치. 자릿수 총 합 * 맞춘 문제 수
+
       record?.playCount += 1;
       record?.correct += currentAnswer;
       if (duration.inSeconds / 100 < record!.highScore) {
         record.highScore = duration.inSeconds / 100;
+        print(record.highScore);
       }
       box.put('${widget.type}${widget.digital}', record);
       print('${record.name}/${record.playCount}/${record.correct}/${record.highScore}');
+      box.put('total', totalRecord!);
+      print(
+          '${totalRecord.name}/${totalRecord.playCount}/${totalRecord.correct}/${totalRecord.highScore}');
       showResultPopup();
     } else {
       getNewQuestion();

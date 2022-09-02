@@ -196,7 +196,7 @@ class _HomePageState extends State<HomePage> {
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          RecordPage(), // ranking page로 변경
+          const RecordPage(), // ranking page로 변경
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(10),
