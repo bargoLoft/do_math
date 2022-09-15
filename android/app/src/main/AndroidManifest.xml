@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.do_math">
+    <uses-permission android:name="android.permission.VIBRATE" />
    <application
         android:label="do_math"
         android:name="${applicationName}"

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/services.dart';
 
 import 'package:do_math/const/const.dart';
 import 'package:do_math/models/record.dart';
@@ -6,7 +7,6 @@ import 'package:do_math/problems/algorithm.dart';
 import 'package:do_math/widgets/count_down.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import '../problems/algorithm.dart';
 
 // ignore: must_be_immutable
 class StagePage extends StatefulWidget {
@@ -344,7 +344,8 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                         //height: 70,
                         width: answer.toString().length * 30 + 15,
                         child: TextField(
-                          enabled: false,
+                          scribbleEnabled: true,
+                          readOnly: true,
                           controller: _textController,
                           maxLines: 1,
                           //maxLength: answer.toString().length,
@@ -426,6 +427,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     return Expanded(
       child: InkWell(
         onTap: () {
+          HapticFeedback.lightImpact();
           if (num == '←' && _textController.text.isNotEmpty) {
             _textController.text =
                 _textController.text.substring(0, _textController.text.length - 1);
