@@ -90,7 +90,8 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     _countController.forward();
     currentNumber += 1;
     if (oX) currentAnswer++;
-    if (currentNumber == 10) {
+    if (currentNumber == 5) {
+      // 테스트용 문제 개수 10개로 늘려야 함
       // 문제 다 풀면.
       _countController.stop();
       timer?.cancel();
@@ -212,68 +213,66 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
         barrierDismissible: false,
         builder: (BuildContext context) {
           return Dialog(
+            backgroundColor: const Color(0xffCCE6FF),
             shape:
                 const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50.0))),
             child: AspectRatio(
               aspectRatio: 10 / 11,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50.0),
-                child: Container(
-                  color: Colors.white,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          text: currentAnswer.toString(),
-                          style: TextStyle(
-                            fontSize: 100,
-                            color: currentAnswer >= 4 ? Colors.blue : Colors.red,
-                          ),
-                          children: const [
-                            TextSpan(
-                                text: '/10',
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.grey,
-                                )),
-                          ],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: currentAnswer.toString(),
+                        style: TextStyle(
+                          fontSize: 100,
+                          color: currentAnswer >= 4 ? Colors.blue : Colors.red,
                         ),
-                      ),
-                      Text('걸린 시간 : ${(duration.inSeconds / 100).toString().padLeft(2, '0')}s'),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            iconSize: 40,
-                            onPressed: () {
-                              _countController.dispose();
-                              timer?.cancel();
-                              Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(Icons.home_rounded),
-                          ),
-                          IconButton(
-                            iconSize: 60,
-                            onPressed: () {
-                              Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
-                              refreshStage();
-                            },
-                            icon: const Icon(Icons.refresh_rounded),
-                          ),
-                          IconButton(
-                            iconSize: 30,
-                            onPressed: () {
-                              Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(Icons.leaderboard_rounded),
-                          ),
+                        children: const [
+                          TextSpan(
+                              text: '/10',
+                              style: TextStyle(
+                                fontSize: 30,
+                                color: Colors.grey,
+                              )),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Text('걸린 시간 : ${(duration.inSeconds / 100).toString().padLeft(2, '0')}s'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          iconSize: 40,
+                          onPressed: () {
+                            _countController.dispose();
+                            timer?.cancel();
+                            Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.home_rounded),
+                        ),
+                        IconButton(
+                          iconSize: 60,
+                          onPressed: () {
+                            Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
+                            refreshStage();
+                          },
+                          icon: const Icon(Icons.refresh_rounded),
+                        ),
+                        IconButton(
+                          iconSize: 30,
+                          onPressed: () {
+                            Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.leaderboard_rounded),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -427,7 +426,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     return Expanded(
       child: InkWell(
         onTap: () {
-          HapticFeedback.lightImpact();
+          HapticFeedback.mediumImpact();
           if (num == '←' && _textController.text.isNotEmpty) {
             _textController.text =
                 _textController.text.substring(0, _textController.text.length - 1);
@@ -437,6 +436,9 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
             _textController.text += num;
             if (_textController.text == answer.toString()) {
               next(true);
+            } else if (_textController.text != answer.toString() &&
+                _textController.text.length == answer.toString().length) {
+              HapticFeedback.vibrate();
             }
           }
         },
