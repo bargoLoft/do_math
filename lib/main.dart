@@ -37,7 +37,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '두수앞',
-      theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'NanumSquare', useMaterial3: true),
+      theme: ThemeData(
+        fontFamily: 'NanumSquare',
+        useMaterial3: true,
+        primaryColor: const Color(0x5fa1df6e), // e8ffd2
+        primaryColorDark: const Color(0xff0a3711),
+        primaryColorLight: const Color(0xfff4ffeb),
+      ),
       home: const HomePage(title: '두수앞'),
     );
   }

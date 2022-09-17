@@ -155,8 +155,10 @@ class _HomePageState extends State<HomePage> {
                         ElevatedButton(
                           onPressed: () => Navigator.pop(context),
                           style: ButtonStyle(
-                            foregroundColor: MaterialStateProperty.all(Colors.blue),
-                            backgroundColor: MaterialStateProperty.all(Colors.white),
+                            foregroundColor:
+                                MaterialStateProperty.all(Theme.of(context).primaryColorDark),
+                            backgroundColor:
+                                MaterialStateProperty.all(Theme.of(context).primaryColorLight),
                             shadowColor: MaterialStateProperty.all(Colors.transparent),
                           ),
                           child: const Text('완료'),
@@ -171,12 +173,39 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+  Widget imageProfile() {
+    return Center(
+      child: Wrap(
+        direction: Axis.vertical,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(bottom: 2.0),
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.question_mark_rounded,
+                color: Theme.of(context).primaryColorDark,
+              ),
+            ),
+          ),
+          const Text(
+            'Lv.1',
+            style: TextStyle(fontSize: 8),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        leading: imageProfile(),
         title: Text(
           widget.title,
           style: const TextStyle(
@@ -201,8 +230,10 @@ class _HomePageState extends State<HomePage> {
           const RecordPage(), // ranking page로 변경
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Column(
+                //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     flex: 3,
@@ -226,40 +257,62 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Expanded(
                     flex: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        buildDigitalButton(context, '한 자리 수', ratio, textSize, 0),
-                        buildDigitalButton(context, '두 자리 수', ratio, textSize, 1),
-                        buildDigitalButton(context, '세 자리 수', ratio, textSize, 2),
-                        buildDigitalButton(context, '네 자리 수', ratio, textSize, 3),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10), color: Colors.white),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            buildDigitalButton(context, '한 자리 수', ratio, textSize, 0),
+                            buildDigitalButton(context, '두 자리 수', ratio, textSize, 1),
+                            buildDigitalButton(context, '세 자리 수', ratio, textSize, 2),
+                            buildDigitalButton(context, '네 자리 수', ratio, textSize, 3),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(
-                      flex: 1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          buildTypeButton(context, '+', ratio, 0, 30),
-                          buildTypeButton(context, '-', ratio, 1, 40),
-                          buildTypeButton(context, '×', ratio, 2, 30),
-                          buildTypeButton(context, '÷', ratio, 3, 30),
-                        ],
-                      )),
-                  const SizedBox(
-                    height: 5,
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Container(
+                        padding: const EdgeInsets.all(0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10), color: Colors.white),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            buildTypeButton(context, '+', ratio, 0, iconSize),
+                            buildTypeButton(context, '﹣', ratio, 1, iconSize),
+                            buildTypeButton(context, '×', ratio, 2, iconSize),
+                            buildTypeButton(context, '÷', ratio, 3, iconSize),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        buildDigitalButton2(context, '한 자리 수', ratio, textSize, 0),
-                        buildDigitalButton2(context, '두 자리 수', ratio, textSize, 1),
-                        buildDigitalButton2(context, '세 자리 수', ratio, textSize, 2),
-                        buildDigitalButton2(context, '네 자리 수', ratio, textSize, 3),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10), color: Colors.white),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            buildDigitalButton2(context, '한 자리 수', ratio, textSize, 0),
+                            buildDigitalButton2(context, '두 자리 수', ratio, textSize, 1),
+                            buildDigitalButton2(context, '세 자리 수', ratio, textSize, 2),
+                            buildDigitalButton2(context, '네 자리 수', ratio, textSize, 3),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(flex: 4, child: buildButton(context, '시작', 2 / 1, 50, type[typeIndex])),
@@ -313,31 +366,26 @@ class _HomePageState extends State<HomePage> {
     int index, [
     double textSize = 30,
   ]) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-      child: AspectRatio(
-        aspectRatio: ratio,
-        child: ElevatedButton(
-          onPressed: () {
-            typeIndex = index;
-            setState(() {});
-          },
-          style: ButtonStyle(
-            padding: MaterialStateProperty.all(EdgeInsets.zero),
-            elevation: MaterialStateProperty.all(0),
-            backgroundColor: MaterialStateProperty.all(Colors.white),
-            foregroundColor: MaterialStateProperty.all(Colors.black),
-            shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
-          ),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: textSize,
-              //fontSize: (typeIndex == index) ? textSize : 30,
-              color: (typeIndex == index) ? Colors.blue : Colors.grey,
-            ),
-          ),
+    return ElevatedButton(
+      onPressed: () {
+        typeIndex = index;
+        setState(() {});
+      },
+      style: ButtonStyle(
+        // padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 0)),
+        elevation: MaterialStateProperty.all(0),
+        backgroundColor: MaterialStateProperty.all(Colors.white),
+        foregroundColor: MaterialStateProperty.all(Colors.black),
+        overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColorLight),
+        shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+      ),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: textSize,
+          //fontSize: (typeIndex == index) ? textSize : 30,
+          color: (typeIndex == index) ? Theme.of(context).primaryColorDark : Colors.grey,
         ),
       ),
     );
@@ -345,31 +393,25 @@ class _HomePageState extends State<HomePage> {
 
   Widget buildDigitalButton(context, String title, double ratio,
       [double textSize = 15, int index = 0]) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-      child: AspectRatio(
-        aspectRatio: ratio,
-        child: ElevatedButton(
-          onPressed: () {
-            digitalIndex_1 = index;
-            setState(() {});
-          },
-          style: ButtonStyle(
-            padding: MaterialStateProperty.all(EdgeInsets.zero),
-            elevation: MaterialStateProperty.all(0),
-            backgroundColor: MaterialStateProperty.all(Colors.white),
-            foregroundColor: MaterialStateProperty.all(Colors.black),
-            shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
-          ),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: textSize,
-              //fontSize: (digitalIndex_1 == index) ? textSize : 15,
-              color: (digitalIndex_1 == index) ? Colors.blue : Colors.grey,
-            ),
-          ),
+    return ElevatedButton(
+      onPressed: () {
+        digitalIndex_1 = index;
+        setState(() {});
+      },
+      style: ButtonStyle(
+        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10)),
+        elevation: MaterialStateProperty.all(0),
+        backgroundColor: MaterialStateProperty.all(Colors.white),
+        foregroundColor: MaterialStateProperty.all(Colors.black),
+        shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+      ),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: textSize,
+          //fontSize: (digitalIndex_1 == index) ? textSize : 15,
+          color: (digitalIndex_1 == index) ? Theme.of(context).primaryColorDark : Colors.grey,
         ),
       ),
     );
@@ -377,31 +419,25 @@ class _HomePageState extends State<HomePage> {
 
   Widget buildDigitalButton2(context, String title, double ratio,
       [double textSize = 15, int index = 0]) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-      child: AspectRatio(
-        aspectRatio: ratio,
-        child: ElevatedButton(
-          onPressed: () {
-            digitalIndex_2 = index;
-            setState(() {});
-          },
-          style: ButtonStyle(
-            padding: MaterialStateProperty.all(EdgeInsets.zero),
-            elevation: MaterialStateProperty.all(0),
-            backgroundColor: MaterialStateProperty.all(Colors.white),
-            foregroundColor: MaterialStateProperty.all(Colors.black),
-            shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
-          ),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: textSize,
-              //fontSize: (digitalIndex_2 == index) ? textSize : 15,
-              color: (digitalIndex_2 == index) ? Colors.blue : Colors.grey,
-            ),
-          ),
+    return ElevatedButton(
+      onPressed: () {
+        digitalIndex_2 = index;
+        setState(() {});
+      },
+      style: ButtonStyle(
+        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10)),
+        elevation: MaterialStateProperty.all(0),
+        backgroundColor: MaterialStateProperty.all(Colors.white),
+        foregroundColor: MaterialStateProperty.all(Colors.black),
+        shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+      ),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: textSize,
+          //fontSize: (digitalIndex_2 == index) ? textSize : 15,
+          color: (digitalIndex_2 == index) ? Theme.of(context).primaryColorDark : Colors.grey,
         ),
       ),
     );
@@ -431,7 +467,7 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: MaterialStateProperty.all(Colors.white),
             foregroundColor: MaterialStateProperty.all(Colors.black),
             shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(13.0))),
           ),
           child: Text(
             title,

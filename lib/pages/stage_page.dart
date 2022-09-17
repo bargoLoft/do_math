@@ -53,6 +53,10 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     getNewQuestion();
   }
 
+  // 적축으로 다는 주석
+  // 뭔가 잘 써진다
+  // 서걱서걱서걱서걱
+
   @override
   void dispose() {
     if (_countController.isAnimating || _countController.isCompleted) {
@@ -209,11 +213,11 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
   void showResultPopup() {
     showDialog(
         context: context,
-        barrierColor: Colors.white.withOpacity(0.6),
+        barrierColor: Colors.white.withOpacity(0.9),
         barrierDismissible: false,
         builder: (BuildContext context) {
           return Dialog(
-            backgroundColor: const Color(0xffCCE6FF),
+            backgroundColor: Theme.of(context).primaryColor,
             shape:
                 const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50.0))),
             child: AspectRatio(
@@ -228,7 +232,8 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                         text: currentAnswer.toString(),
                         style: TextStyle(
                           fontSize: 100,
-                          color: currentAnswer >= 4 ? Colors.blue : Colors.red,
+                          color:
+                              currentAnswer >= 4 ? Theme.of(context).primaryColorDark : Colors.red,
                         ),
                         children: const [
                           TextSpan(
