@@ -1,7 +1,6 @@
 import 'package:do_math/models/record.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hive/hive.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({Key? key}) : super(key: key);
@@ -19,23 +18,24 @@ Widget CustomText(String text) {
 
 Widget CustomListTile(Record recordData) {
   var percent = 10 * (recordData.correct / recordData.playCount);
+  List koreanNumber = ['한', '두', '세', '네'];
   String type = recordData.name[0];
-  String second = recordData.name[5];
-  String first = recordData.name[2];
+  String second = koreanNumber[int.parse(recordData.name[5]) - 1];
+  String first = koreanNumber[int.parse(recordData.name[2]) - 1];
 
   return ClipRRect(
-    borderRadius: BorderRadius.circular(30),
+    borderRadius: BorderRadius.circular(13),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
       child: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${first}자리수 ${type} ${second}자리수  ',
+                '${first}자릿 수 ${type} ${second}자릿 수  ',
                 style: TextStyle(fontSize: 20),
               ),
               Text('시도 : ${recordData.playCount} / 정답률 : ${percent.toInt()}% / 최고'

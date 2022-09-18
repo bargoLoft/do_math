@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            top: Radius.circular(15),
+            top: Radius.circular(13),
           ),
         ),
         clipBehavior: Clip.hardEdge,
@@ -241,7 +241,11 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: buildButton(context, '오늘의 문제', 1 / 2),
+                          child: buildButton(
+                              context,
+                              '오늘의 문제\n${DateTime.now().month}월 '
+                              '${DateTime.now().day}일',
+                              1 / 2),
                         ),
                         Expanded(
                           flex: 1,
@@ -262,14 +266,14 @@ class _HomePageState extends State<HomePage> {
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10), color: Colors.white),
+                            borderRadius: BorderRadius.circular(13), color: Colors.white),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            buildDigitalButton(context, '한 자리 수', ratio, textSize, 0),
-                            buildDigitalButton(context, '두 자리 수', ratio, textSize, 1),
-                            buildDigitalButton(context, '세 자리 수', ratio, textSize, 2),
-                            buildDigitalButton(context, '네 자리 수', ratio, textSize, 3),
+                            buildDigitalButton(context, '한자릿수', ratio, textSize, 0),
+                            buildDigitalButton(context, '두자릿수', ratio, textSize, 1),
+                            buildDigitalButton(context, '세자릿수', ratio, textSize, 2),
+                            buildDigitalButton(context, '네자릿수', ratio, textSize, 3),
                           ],
                         ),
                       ),
@@ -282,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                       child: Container(
                         padding: const EdgeInsets.all(0),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10), color: Colors.white),
+                            borderRadius: BorderRadius.circular(13), color: Colors.white),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -302,14 +306,14 @@ class _HomePageState extends State<HomePage> {
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10), color: Colors.white),
+                            borderRadius: BorderRadius.circular(13), color: Colors.white),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            buildDigitalButton2(context, '한 자리 수', ratio, textSize, 0),
-                            buildDigitalButton2(context, '두 자리 수', ratio, textSize, 1),
-                            buildDigitalButton2(context, '세 자리 수', ratio, textSize, 2),
-                            buildDigitalButton2(context, '네 자리 수', ratio, textSize, 3),
+                            buildDigitalButton2(context, '한자릿수', ratio, textSize, 0),
+                            buildDigitalButton2(context, '두자릿수', ratio, textSize, 1),
+                            buildDigitalButton2(context, '세자릿수', ratio, textSize, 2),
+                            buildDigitalButton2(context, '네자릿수', ratio, textSize, 3),
                           ],
                         ),
                       ),
@@ -378,7 +382,7 @@ class _HomePageState extends State<HomePage> {
         foregroundColor: MaterialStateProperty.all(Colors.black),
         overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColorLight),
         shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(13.0))),
       ),
       child: Text(
         title,
@@ -406,7 +410,7 @@ class _HomePageState extends State<HomePage> {
         foregroundColor: MaterialStateProperty.all(Colors.black),
         overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColorLight),
         shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(13.0))),
       ),
       child: Text(
         title,
@@ -434,7 +438,7 @@ class _HomePageState extends State<HomePage> {
         foregroundColor: MaterialStateProperty.all(Colors.black),
         overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColorLight),
         shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(13.0))),
       ),
       child: Text(
         title,
@@ -476,7 +480,8 @@ class _HomePageState extends State<HomePage> {
           ),
           child: Text(
             title,
-            style: TextStyle(fontSize: textSize),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: textSize, height: 2),
           ),
         ),
       ),
