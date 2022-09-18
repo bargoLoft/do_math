@@ -241,11 +241,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: buildButton(
-                              context,
-                              '오늘의 문제\n${DateTime.now().month}월 '
-                              '${DateTime.now().day}일',
-                              1 / 2),
+                          child: buildButton2(context, '오늘의 문제', 1 / 2),
                         ),
                         Expanded(
                           flex: 1,
@@ -482,6 +478,54 @@ class _HomePageState extends State<HomePage> {
             title,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: textSize, height: 2),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildButton2(context, String title, double ratio,
+      [double textSize = 20, String type = '+']) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+      child: AspectRatio(
+        aspectRatio: ratio,
+        child: ElevatedButton(
+          onPressed: () {
+            //await으로 맞춘개수, 걸린 시간, 문제 유형 받아와서 기록.
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StagePage(
+                          type: type,
+                          digital: [digitalIndex_1 + 1, digitalIndex_2 + 1],
+                          count: 2,
+                        )));
+          },
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            elevation: MaterialStateProperty.all(0),
+            backgroundColor: MaterialStateProperty.all(Colors.white),
+            foregroundColor: MaterialStateProperty.all(Colors.black),
+            shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(13.0))),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: textSize),
+              ),
+              Text(
+                '\n${DateTime.now().month}월${DateTime.now().day}일',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
           ),
         ),
       ),

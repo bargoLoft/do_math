@@ -35,7 +35,7 @@ Widget CustomListTile(Record recordData) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${first}자릿 수 ${type} ${second}자릿 수  ',
+                '${first}자릿수 ${type} ${second}자릿수  ',
                 style: TextStyle(fontSize: 20),
               ),
               Text('시도 : ${recordData.playCount} / 정답률 : ${percent.toInt()}% / 최고'
