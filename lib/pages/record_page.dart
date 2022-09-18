@@ -19,17 +19,44 @@ Widget CustomText(String text) {
 
 Widget CustomListTile(Record recordData) {
   var percent = 10 * (recordData.correct / recordData.playCount);
-  return ExpansionTile(
-    //expandedAlignment: Alignment.bottomCenter,
-    //expandedCrossAxisAlignment: CrossAxisAlignment.start,
-    title: Text(recordData.name),
-    children: [
-      ListTile(title: CustomText(recordData.playCount.toString())),
-      ListTile(title: CustomText(recordData.correct.toString())),
-      ListTile(title: CustomText(percent.toString())),
-      ListTile(title: CustomText(recordData.highScore.toString())),
-    ],
+  String type = recordData.name[0];
+  String second = recordData.name[5];
+  String first = recordData.name[2];
+
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(30),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+      child: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${first}자리수 ${type} ${second}자리수  ',
+                style: TextStyle(fontSize: 20),
+              ),
+              Text('시도 : ${recordData.playCount} / 정답률 : ${percent.toInt()}% / 최고'
+                  ' 기록 : ${recordData.highScore}s')
+            ],
+          ),
+        ),
+      ),
+    ),
   );
+  //   ExpansionTile(
+  //   //expandedAlignment: Alignment.bottomCenter,
+  //   //expandedCrossAxisAlignment: CrossAxisAlignment.start,
+  //   title: Text(recordData.name),
+  //   children: [
+  //     ListTile(title: CustomText(recordData.playCount.toString())),
+  //     ListTile(title: CustomText(recordData.correct.toString())),
+  //     ListTile(title: CustomText(percent.toString())),
+  //     ListTile(title: CustomText(recordData.highScore.toString())),
+  //   ],
+  // );
 }
 
 class _RecordPageState extends State<RecordPage> {
@@ -49,15 +76,18 @@ class _RecordPageState extends State<RecordPage> {
                   itemCount: records.length,
                   itemBuilder: (context, int index) {
                     var recordData = records[index];
-                    var percent = 10 * (recordData.correct / recordData.playCount);
-                    return CustomListTile(recordData);
-                    if (recordData.name == 'total') {
-                      return Text(
-                          '총..${recordData.playCount}번.. 맞춘문제 ${recordData.correct}개..경험치 ${recordData.highScore.toInt()}..');
+                    if (recordData.name != 'total') {
+                      return CustomListTile(recordData);
                     } else {
-                      return Text(
-                          '${recordData.name} / 시도 : ${recordData.playCount} / 정답률 : ${percent.toInt()}% / 최고 기록 : ${recordData.highScore}s');
+                      return const SizedBox(height: 0); // Total 때문에
                     }
+                    // if (recordData.name == 'total') {
+                    //   return Text(
+                    //       '총..${recordData.playCount}번.. 맞춘문제 ${recordData.correct}개..경험치 ${recordData.highScore.toInt()}..');
+                    // } else {
+                    //   return Text(
+                    //       '${recordData.name} / 시도 : ${recordData.playCount} / 정답률 : ${percent.toInt()}% / 최고 기록 : ${recordData.highScore}s');
+                    // }
                   }));
         },
       ),

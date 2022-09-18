@@ -412,10 +412,9 @@ class _HomePageState extends State<HomePage> {
         title,
         style: TextStyle(
           fontSize: textSize,
-          fontWeight: (digitalIndex_1 == index) ? FontWeight.bold : FontWeight.normal,
-
+          fontWeight: (digitalIndex_1 >= index) ? FontWeight.bold : FontWeight.normal,
           //fontSize: (digitalIndex_1 == index) ? textSize : 15,
-          color: (digitalIndex_1 == index) ? Theme.of(context).primaryColorDark : Colors.grey,
+          color: (digitalIndex_1 >= index) ? Theme.of(context).primaryColorDark : Colors.grey,
         ),
       ),
     );
@@ -441,9 +440,9 @@ class _HomePageState extends State<HomePage> {
         title,
         style: TextStyle(
           fontSize: textSize,
-          fontWeight: (digitalIndex_2 == index) ? FontWeight.bold : FontWeight.normal,
+          fontWeight: (digitalIndex_2 >= index) ? FontWeight.bold : FontWeight.normal,
           //fontSize: (digitalIndex_2 == index) ? textSize : 15,
-          color: (digitalIndex_2 == index) ? Theme.of(context).primaryColorDark : Colors.grey,
+          color: (digitalIndex_2 >= index) ? Theme.of(context).primaryColorDark : Colors.grey,
         ),
       ),
     );
