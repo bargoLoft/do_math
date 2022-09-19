@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '앱 시작시 바로 검색',
+                                    '진행 시간 표시',
                                     style: Theme.of(context).textTheme.bodyLarge,
                                   ),
                                   CupertinoSwitch(
@@ -247,8 +247,8 @@ class _HomePageState extends State<HomePage> {
                           flex: 1,
                           child: Column(
                             children: [
-                              Expanded(child: buildButton(context, '랭킹', 2 / 1)),
-                              Expanded(child: buildButton(context, '챌린지', 2 / 1)),
+                              Expanded(child: buildButton3(context, '랭킹', 2 / 1)),
+                              Expanded(child: buildButton3(context, '챌린지', 2 / 1)),
                             ],
                           ),
                         ),
@@ -474,10 +474,23 @@ class _HomePageState extends State<HomePage> {
             shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(13.0))),
           ),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: textSize, height: 2),
+          child: Wrap(
+            direction: Axis.vertical,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Icon(
+                Icons.arrow_circle_right_outlined,
+                size: 100,
+              ),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: textSize,
+                  height: 2,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -513,19 +526,75 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: textSize),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 10.0),
+                child: Icon(
+                  Icons.calendar_today,
+                  size: 50,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: textSize),
+                ),
               ),
               Text(
-                '\n${DateTime.now().month}월${DateTime.now().day}일',
-                style: TextStyle(
+                '${DateTime.now().month}월${DateTime.now().day}일',
+                style: const TextStyle(
                   fontSize: 12,
                   color: Colors.grey,
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildButton3(context, String title, double ratio,
+      [double textSize = 20, String type = '+']) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+      child: AspectRatio(
+        aspectRatio: ratio,
+        child: ElevatedButton(
+          onPressed: () {
+            Fluttertoast.showToast(
+              msg: "준비중입니다",
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.white,
+              textColor: Theme.of(context).primaryColorDark,
+              fontSize: 12.0,
+              toastLength: Toast.LENGTH_LONG,
+              timeInSecForIosWeb: 1,
+              webShowClose: false,
+            );
+            //await으로 맞춘개수, 걸린 시간, 문제 유형 받아와서 기록.
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => StagePage(
+            //               type: type,
+            //               digital: [digitalIndex_1 + 1, digitalIndex_2 + 1],
+            //               count: 2,
+            //             )));
+          },
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            elevation: MaterialStateProperty.all(0),
+            backgroundColor: MaterialStateProperty.all(Colors.white),
+            foregroundColor: MaterialStateProperty.all(Colors.black),
+            shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(13.0))),
+          ),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: textSize, height: 2, color: Colors.grey.shade300),
           ),
         ),
       ),

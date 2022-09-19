@@ -7,6 +7,9 @@ import 'package:do_math/problems/algorithm.dart';
 import 'package:do_math/widgets/count_down.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/settingProvider.dart';
 
 // ignore: must_be_immutable
 class StagePage extends StatefulWidget {
@@ -94,7 +97,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     _countController.forward();
     currentNumber += 1;
     if (oX) currentAnswer++;
-    if (currentNumber == 5) {
+    if (currentNumber == 10) {
       // 테스트용 문제 개수 10개로 늘려야 함
       // 문제 다 풀면.
       _countController.stop();
@@ -320,7 +323,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                   color: Colors.green,
                 ),
                 Countdown(animation: StepTween(begin: limitTime, end: 0).animate(_countController)),
-                Text('${duration.inSeconds}'),
+                if (Provider.of<Setting>(context).getAutoFocus()) Text('${duration.inSeconds}'),
               ],
             ),
             Expanded(

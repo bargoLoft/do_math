@@ -24,13 +24,13 @@ Widget CustomListTile(Record recordData) {
   String first = koreanNumber[int.parse(recordData.name[2]) - 1];
 
   return ClipRRect(
-    borderRadius: BorderRadius.circular(13),
+    borderRadius: BorderRadius.circular(20),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
       child: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -70,25 +70,31 @@ class _RecordPageState extends State<RecordPage> {
           var records = record.values.toList().cast<Record>();
           //var totalRecord = record.get('total');
           records.sort((a, b) => a.name.compareTo(b.name));
-          return Align(
-              alignment: Alignment.center,
-              child: ListView.builder(
-                  itemCount: records.length,
-                  itemBuilder: (context, int index) {
-                    var recordData = records[index];
-                    if (recordData.name != 'total') {
-                      return CustomListTile(recordData);
-                    } else {
-                      return const SizedBox(height: 0); // Total 때문에
-                    }
-                    // if (recordData.name == 'total') {
-                    //   return Text(
-                    //       '총..${recordData.playCount}번.. 맞춘문제 ${recordData.correct}개..경험치 ${recordData.highScore.toInt()}..');
-                    // } else {
-                    //   return Text(
-                    //       '${recordData.name} / 시도 : ${recordData.playCount} / 정답률 : ${percent.toInt()}% / 최고 기록 : ${recordData.highScore}s');
-                    // }
-                  }));
+          if (records.isEmpty) {
+            return const Center(
+              child: Text('아직 진행 내역이 없습니다'),
+            );
+          } else {
+            return Align(
+                alignment: Alignment.center,
+                child: ListView.builder(
+                    itemCount: records.length,
+                    itemBuilder: (context, int index) {
+                      var recordData = records[index];
+                      if (recordData.name != 'total') {
+                        return CustomListTile(recordData);
+                      } else {
+                        return const SizedBox(height: 0); // Total 때문에
+                      }
+                      // if (recordData.name == 'total') {
+                      //   return Text(
+                      //       '총..${recordData.playCount}번.. 맞춘문제 ${recordData.correct}개..경험치 ${recordData.highScore.toInt()}..');
+                      // } else {
+                      //   return Text(
+                      //       '${recordData.name} / 시도 : ${recordData.playCount} / 정답률 : ${percent.toInt()}% / 최고 기록 : ${recordData.highScore}s');
+                      // }
+                    }));
+          }
         },
       ),
     );

@@ -7,7 +7,7 @@ class Setting with ChangeNotifier {
 
   Setting(this._autoFocus, this._left);
 
-  bool get autoFocus => _autoFocus;
+  bool getAutoFocus() => _autoFocus;
   bool get left => _left;
 
   setAutoFocus(bool focus) async {
