@@ -3,10 +3,12 @@ import 'package:do_math/pages/stage_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../const/const.dart';
+import '../models/record.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -173,7 +175,77 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+  void showAward(BuildContext context) {
+    showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(13),
+          ),
+        ),
+        clipBehavior: Clip.hardEdge,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Consumer(
+                builder: (context, appModel, child) => Container(
+                  height: 200,
+                  color: Colors.white,
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '박물관',
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 50),
+                              Center(
+                                child: Text(
+                                  '아직 획득한 뱃지가 없습니다',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 50),
+                            ],
+                          ),
+                        ),
+                        // ElevatedButton(
+                        //   onPressed: () => Navigator.pop(context),
+                        //   style: ButtonStyle(
+                        //     foregroundColor:
+                        //         MaterialStateProperty.all(Theme.of(context).primaryColorDark),
+                        //     backgroundColor:
+                        //         MaterialStateProperty.all(Theme.of(context).primaryColorLight),
+                        //     shadowColor: MaterialStateProperty.all(Colors.transparent),
+                        //   ),
+                        //   child: const Text('완료'),
+                        // )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        });
+  }
+
   Widget imageProfile() {
+    var record = Hive.box<Record>('record');
+    var total = record.get('total');
     return Center(
       child: Wrap(
         direction: Axis.vertical,
@@ -190,10 +262,15 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          const Text(
-            'Lv.1',
-            style: TextStyle(fontSize: 8),
-          ),
+          total == null
+              ? const Text(
+                  'Lv.0',
+                  style: TextStyle(fontSize: 8),
+                )
+              : Text(
+                  'Lv.${(total.highScore) ~/ 100} ${((total.highScore) % 100).toInt()}%',
+                  style: const TextStyle(fontSize: 8),
+                ),
         ],
       ),
     );
@@ -214,10 +291,14 @@ class _HomePageState extends State<HomePage> {
             letterSpacing: 4,
           ),
         ),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Icon(Icons.account_balance_outlined),
+            padding: const EdgeInsets.all(10.0),
+            child: GestureDetector(
+                onTap: () {
+                  showAward(context);
+                },
+                child: const Icon(Icons.account_balance_outlined)),
           ),
         ],
         backgroundColor: Colors.grey.shade100,
@@ -478,7 +559,7 @@ class _HomePageState extends State<HomePage> {
             direction: Axis.vertical,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.arrow_circle_right_outlined,
                 size: 100,
               ),
