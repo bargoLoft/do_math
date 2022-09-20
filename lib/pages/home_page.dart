@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> {
   late SharedPreferences _prefs;
 
   List type = ['+', '-', '×', '÷'];
+  List koreanCount = ['', '한자릿수', '두자릿수', '세자릿수', '네자릿수'];
   double ratio = 6 / 5;
 
   @override
@@ -411,67 +412,130 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(13), color: Colors.white),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            buildDigitalButton(context, '한자릿수', ratio, textSize, 0),
-                            buildDigitalButton(context, '두자릿수', ratio, textSize, 1),
-                            buildDigitalButton(context, '세자릿수', ratio, textSize, 2),
-                            buildDigitalButton(context, '네자릿수', ratio, textSize, 3),
-                          ],
+                  (typeIndex != 3)
+                      ? Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(13), color: Colors.white),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  buildDigitalButton(context, koreanCount[1], ratio, textSize, 0),
+                                  buildDigitalButton(context, koreanCount[2], ratio, textSize, 1),
+                                  buildDigitalButton(context, koreanCount[3], ratio, textSize, 2),
+                                  buildDigitalButton(context, koreanCount[4], ratio, textSize, 3),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(13), color: Colors.white),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  buildTypeButton(context, '+', ratio, 0, iconSize),
+                                  buildTypeButton(context, '﹣', ratio, 1, iconSize),
+                                  buildTypeButton(context, '×', ratio, 2, iconSize),
+                                  buildTypeButton(context, '÷', ratio, 3, iconSize),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Container(
-                        padding: const EdgeInsets.all(0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(13), color: Colors.white),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            buildTypeButton(context, '+', ratio, 0, iconSize),
-                            buildTypeButton(context, '﹣', ratio, 1, iconSize),
-                            buildTypeButton(context, '×', ratio, 2, iconSize),
-                            buildTypeButton(context, '÷', ratio, 3, iconSize),
-                          ],
+                  (typeIndex != 3)
+                      ? Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(13), color: Colors.white),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  buildTypeButton(context, '+', ratio, 0, iconSize),
+                                  buildTypeButton(context, '﹣', ratio, 1, iconSize),
+                                  buildTypeButton(context, '×', ratio, 2, iconSize),
+                                  buildTypeButton(context, '÷', ratio, 3, iconSize),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(13), color: Colors.white),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  buildDigitalButton2(context, koreanCount[1], ratio, textSize, 0),
+                                  buildDigitalButton2(context, koreanCount[2], ratio, textSize, 1),
+                                  buildDigitalButton2(context, koreanCount[3], ratio, textSize, 2),
+                                  buildDigitalButton2(context, koreanCount[4], ratio, textSize, 3),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(13), color: Colors.white),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            buildDigitalButton2(context, '한자릿수', ratio, textSize, 0),
-                            buildDigitalButton2(context, '두자릿수', ratio, textSize, 1),
-                            buildDigitalButton2(context, '세자릿수', ratio, textSize, 2),
-                            buildDigitalButton2(context, '네자릿수', ratio, textSize, 3),
-                          ],
+                  (typeIndex != 3)
+                      ? Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(13), color: Colors.white),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  buildDigitalButton2(context, koreanCount[1], ratio, textSize, 0),
+                                  buildDigitalButton2(context, koreanCount[2], ratio, textSize, 1),
+                                  buildDigitalButton2(context, koreanCount[3], ratio, textSize, 2),
+                                  buildDigitalButton2(context, koreanCount[4], ratio, textSize, 3),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(13), color: Colors.white),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  buildDigitalButton(context, koreanCount[1], ratio, textSize, 0),
+                                  buildDigitalButton(context, koreanCount[2], ratio, textSize, 1),
+                                  buildDigitalButton(context, koreanCount[3], ratio, textSize, 2),
+                                  buildDigitalButton(context, koreanCount[4], ratio, textSize, 3),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Expanded(flex: 4, child: buildButton(context, '시작', 2 / 1, 50, type[typeIndex])),
+                  Expanded(flex: 4, child: buildButton(context, '시작', 2 / 1, 40, type[typeIndex])),
                 ],
               ),
             ),
@@ -652,12 +716,13 @@ class _HomePageState extends State<HomePage> {
                 Icons.arrow_circle_right_outlined,
                 size: 100,
               ),
+              SizedBox(height: 10),
               Text(
                 title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: textSize,
-                  height: 2,
+                  height: 1,
                 ),
               ),
             ],

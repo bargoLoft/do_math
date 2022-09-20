@@ -100,7 +100,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     _countController.forward();
     currentNumber += 1;
     if (oX) currentAnswer++;
-    if (currentNumber == 5) {
+    if (currentNumber == questionNumber) {
       // 테스트용 문제 개수 10개로 늘려야 함
       // 문제 다 풀면.
       _countController.stop();
