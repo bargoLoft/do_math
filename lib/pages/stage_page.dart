@@ -339,55 +339,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Provider.of<Setting>(context).getLeft()
-                        ? Column(
-                            children: [
-                              Text(question, style: stageTextStyle),
-                              SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                //crossAxisAlignment: CrossAxisAlignment.baseline,
-                                //textBaseline: TextBaseline.alphabetic,
-                                children: [
-                                  const Text(
-                                    '= ',
-                                    style: TextStyle(fontSize: 40),
-                                  ),
-                                  SizedBox(
-                                    //height: 70,
-                                    width: answer.toString().length * 25 + 10,
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: TextField(
-                                        scribbleEnabled: true,
-                                        readOnly: true,
-                                        controller: _textController,
-                                        maxLines: 1,
-                                        //maxLength: answer.toString().length,
-                                        //textAlign: TextAlign.center,
-                                        textAlign: TextAlign.end,
-                                        textAlignVertical: TextAlignVertical.center,
-                                        //expands: true,
-                                        //textCapitalization: TextCapitalization.words,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          isDense: true,
-                                          contentPadding: EdgeInsets.only(left: 5, right: 5),
-                                          //counterText: '',
-                                        ),
-                                        style: const TextStyle(
-                                          fontSize: 40,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 35,
-                                  )
-                                ],
-                              ),
-                            ],
-                          )
-                        : Center(
+                        ? Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -395,9 +347,14 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Text(
-                                      question.substring(0, widget.digital[0]),
-                                      style: stageTextStyle,
+                                    Row(
+                                      children: [
+                                        Text(
+                                          question.substring(0, widget.digital[0]),
+                                          style: stageTextStyle,
+                                        ),
+                                        const SizedBox(width: 5),
+                                      ],
                                     ),
                                     Row(
                                       children: [
@@ -405,11 +362,12 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                                           widget.type,
                                           style: stageTextStyle,
                                         ),
-                                        SizedBox(width: 5),
+                                        const SizedBox(width: 5),
                                         Text(
                                           question.substring(widget.digital[0] + 1),
                                           style: stageTextStyle,
                                         ),
+                                        const SizedBox(width: 5),
                                       ],
                                     ),
                                     Row(
@@ -418,9 +376,10 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                                       //textBaseline: TextBaseline.alphabetic,
                                       children: [
                                         const Text(
-                                          '= ',
+                                          '=',
                                           style: TextStyle(fontSize: 40),
                                         ),
+                                        SizedBox(width: 10),
                                         SizedBox(
                                           //height: 70,
                                           width: answer.toString().length * 25 + 10,
@@ -453,12 +412,62 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  width: answer.toString().length * 25,
-                                )
+                                SizedBox(width: 25
+                                    //answer.toString().length * 25,
+                                    )
                               ],
                             ),
-                          ),
+                          ) // 세로셈
+                        : Column(
+                            children: [
+                              Text(question, style: stageTextStyle),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                //crossAxisAlignment: CrossAxisAlignment.baseline,
+                                //textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  const Text(
+                                    '=',
+                                    style: TextStyle(fontSize: 40),
+                                  ),
+                                  SizedBox(width: 15),
+                                  SizedBox(
+                                    //height: 70,
+                                    width: answer.toString().length * 25 + 10,
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TextField(
+                                        scribbleEnabled: true,
+                                        readOnly: true,
+                                        controller: _textController,
+                                        maxLines: 1,
+                                        //maxLength: answer.toString().length,
+                                        //textAlign: TextAlign.center,
+                                        textAlign: TextAlign.end,
+                                        textAlignVertical: TextAlignVertical.center,
+                                        //expands: true,
+                                        //textCapitalization: TextCapitalization.words,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.only(left: 5, right: 5),
+                                          //counterText: '',
+                                        ),
+                                        style: const TextStyle(
+                                          //letterSpacing: 2,
+                                          fontSize: 40,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 40,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ), // 가로셈
                   ),
                 ],
               ),

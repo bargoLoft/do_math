@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '가로셈 방식',
+                                    '세로셈 방식',
                                     style: Theme.of(context).textTheme.bodyLarge,
                                   ),
                                   CupertinoSwitch(
