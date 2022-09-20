@@ -108,13 +108,13 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context, StateSetter setState) {
               return Consumer(
                 builder: (context, appModel, child) => Container(
-                  height: 350,
+                  height: 370,
                   color: Colors.white,
                   child: Center(
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -214,32 +214,45 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               const SizedBox(height: space),
-                              Text(
-                                '설정 변경 후 앱을 재시작 해주세요',
+                            ],
+                          ),
+                        ),
+                        Stack(
+                          alignment: AlignmentDirectional.centerStart,
+                          children: [
+                            Positioned(
+                              left: 20,
+                              child: Text(
+                                'hadamath v1.0.0\n2022 bargoLoft',
                                 style: TextStyle(
                                   fontSize: 10,
                                   color: Colors.grey.shade400,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Provider.of<Setting>(context, listen: false)
-                                .setTimeLimit(sliderController.sliderValue);
-                            Provider.of<Setting>(context, listen: false).setAutoFocus(_autoFocus);
-                            Provider.of<Setting>(context, listen: false).setLeft(_isLeftHanded);
-                            Navigator.pop(context);
-                          },
-                          style: ButtonStyle(
-                            foregroundColor:
-                                MaterialStateProperty.all(Theme.of(context).primaryColorDark),
-                            backgroundColor:
-                                MaterialStateProperty.all(Theme.of(context).primaryColorLight),
-                            shadowColor: MaterialStateProperty.all(Colors.transparent),
-                          ),
-                          child: const Text('완료'),
+                            ),
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Provider.of<Setting>(context, listen: false)
+                                      .setTimeLimit(sliderController.sliderValue);
+                                  Provider.of<Setting>(context, listen: false)
+                                      .setAutoFocus(_autoFocus);
+                                  Provider.of<Setting>(context, listen: false).setRtL(_isRtL);
+                                  Provider.of<Setting>(context, listen: false)
+                                      .setLeft(_isLeftHanded);
+                                  Navigator.pop(context);
+                                },
+                                style: ButtonStyle(
+                                  foregroundColor:
+                                      MaterialStateProperty.all(Theme.of(context).primaryColorDark),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Theme.of(context).primaryColorLight),
+                                  shadowColor: MaterialStateProperty.all(Colors.transparent),
+                                ),
+                                child: const Text('완료'),
+                              ),
+                            ),
+                          ],
                         )
                       ],
                     ),
@@ -329,12 +342,17 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(bottom: 2.0),
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.question_mark_rounded,
-                color: Theme.of(context).primaryColorDark,
+            child: GestureDetector(
+              onTap: () {
+                showCharacter(context);
+              },
+              child: CircleAvatar(
+                radius: 20,
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.question_mark_rounded,
+                  color: Colors.grey.shade400,
+                ),
               ),
             ),
           ),
@@ -350,6 +368,74 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  void showCharacter(BuildContext context) {
+    showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(13),
+          ),
+        ),
+        clipBehavior: Clip.hardEdge,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Consumer(
+                builder: (context, appModel, child) => Container(
+                  height: 200,
+                  color: Colors.white,
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '캐릭터',
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 50),
+                              Center(
+                                child: Text(
+                                  '아직 획득한 캐릭터가 없습니다',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 50),
+                            ],
+                          ),
+                        ),
+                        // ElevatedButton(
+                        //   onPressed: () => Navigator.pop(context),
+                        //   style: ButtonStyle(
+                        //     foregroundColor:
+                        //         MaterialStateProperty.all(Theme.of(context).primaryColorDark),
+                        //     backgroundColor:
+                        //         MaterialStateProperty.all(Theme.of(context).primaryColorLight),
+                        //     shadowColor: MaterialStateProperty.all(Colors.transparent),
+                        //   ),
+                        //   child: const Text('완료'),
+                        // )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 
   @override
@@ -705,6 +791,7 @@ class _HomePageState extends State<HomePage> {
             elevation: MaterialStateProperty.all(0),
             backgroundColor: MaterialStateProperty.all(Colors.white),
             foregroundColor: MaterialStateProperty.all(Colors.black),
+            overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
             shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(13.0))),
           ),
@@ -756,6 +843,7 @@ class _HomePageState extends State<HomePage> {
             elevation: MaterialStateProperty.all(0),
             backgroundColor: MaterialStateProperty.all(Colors.white),
             foregroundColor: MaterialStateProperty.all(Colors.black),
+            overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
             shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(13.0))),
           ),
@@ -820,6 +908,7 @@ class _HomePageState extends State<HomePage> {
             //             )));
           },
           style: ButtonStyle(
+            overlayColor: MaterialStateProperty.all(Colors.red.shade50),
             padding: MaterialStateProperty.all(EdgeInsets.zero),
             elevation: MaterialStateProperty.all(0),
             backgroundColor: MaterialStateProperty.all(Colors.white),
