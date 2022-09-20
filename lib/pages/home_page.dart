@@ -522,27 +522,36 @@ class _HomePageState extends State<HomePage> {
     int index, [
     double textSize = 30,
   ]) {
-    return ElevatedButton(
-      onPressed: () {
-        typeIndex = index;
-        setState(() {});
-      },
-      style: ButtonStyle(
-        // padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 0)),
-        elevation: MaterialStateProperty.all(0),
-        backgroundColor: MaterialStateProperty.all(Colors.white),
-        foregroundColor: MaterialStateProperty.all(Colors.black),
-        overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColorLight),
-        shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(13.0))),
-      ),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: textSize,
-          fontWeight: (typeIndex == index) ? FontWeight.bold : FontWeight.normal,
-          //fontSize: (typeIndex == index) ? textSize : 30,
-          color: (typeIndex == index) ? Theme.of(context).primaryColorDark : Colors.grey,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: AspectRatio(
+        aspectRatio: 1 / 1,
+        child: ElevatedButton(
+          onPressed: () {
+            typeIndex = index;
+            setState(() {});
+          },
+          style: ButtonStyle(
+            // padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 0)),
+            elevation: MaterialStateProperty.all(0),
+            backgroundColor: typeIndex == index
+                ? MaterialStateProperty.all(Theme.of(context).primaryColorLight)
+                : MaterialStateProperty.all(Colors.white),
+            foregroundColor: MaterialStateProperty.all(Colors.black),
+            overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColorLight),
+            shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0))),
+            padding: MaterialStateProperty.all(EdgeInsets.all(0)),
+          ),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: textSize,
+              fontWeight: (typeIndex == index) ? FontWeight.bold : FontWeight.normal,
+              //fontSize: (typeIndex == index) ? textSize : 30,
+              color: (typeIndex == index) ? Theme.of(context).primaryColorDark : Colors.grey,
+            ),
+          ),
         ),
       ),
     );
@@ -558,7 +567,9 @@ class _HomePageState extends State<HomePage> {
       style: ButtonStyle(
         padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10)),
         elevation: MaterialStateProperty.all(0),
-        backgroundColor: MaterialStateProperty.all(Colors.white),
+        backgroundColor: digitalIndex_1 == index
+            ? MaterialStateProperty.all(Theme.of(context).primaryColorLight)
+            : MaterialStateProperty.all(Colors.white),
         foregroundColor: MaterialStateProperty.all(Colors.black),
         overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColorLight),
         shape: MaterialStateProperty.all(
@@ -586,7 +597,9 @@ class _HomePageState extends State<HomePage> {
       style: ButtonStyle(
         padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10)),
         elevation: MaterialStateProperty.all(0),
-        backgroundColor: MaterialStateProperty.all(Colors.white),
+        backgroundColor: digitalIndex_2 == index
+            ? MaterialStateProperty.all(Theme.of(context).primaryColorLight)
+            : MaterialStateProperty.all(Colors.white),
         foregroundColor: MaterialStateProperty.all(Colors.black),
         overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColorLight),
         shape: MaterialStateProperty.all(
