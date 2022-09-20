@@ -24,6 +24,7 @@ void main() async {
           create: (context) => Setting(
                 (prefs.getBool('autoFocus')) ?? false,
                 (prefs.getBool('left')) ?? false,
+                (prefs.getBool('rtl')) ?? false,
                 (prefs.getDouble('timeLimit')) ?? 10.0,
               )),
     ], child: const MyApp()),

@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage> {
 
   bool _autoFocus = false;
   bool _isLeftHanded = false;
+  bool _isRtL = false;
   //bool _method = true;
   late SharedPreferences _prefs;
 
@@ -83,12 +84,15 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _autoFocus = _prefs.getBool('autoFocus') ?? false;
       _isLeftHanded = _prefs.getBool('left') ?? false;
+      _isRtL = _prefs.getBool('rtl') ?? false;
     });
   }
 
   void showBottomSheet(BuildContext context) {
     SliderController sliderController =
         SliderController(Provider.of<Setting>(context, listen: false).getTimeLimit());
+
+    const double space = 12.0;
 
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
@@ -103,7 +107,7 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context, StateSetter setState) {
               return Consumer(
                 builder: (context, appModel, child) => Container(
-                  height: 300,
+                  height: 350,
                   color: Colors.white,
                   child: Center(
                     child: Column(
@@ -127,11 +131,11 @@ class _HomePageState extends State<HomePage> {
                                         _autoFocus = value;
                                       });
                                     },
-                                    activeColor: Theme.of(context).primaryColor,
+                                    activeColor: Theme.of(context).primaryColorDark,
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: space),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -146,11 +150,30 @@ class _HomePageState extends State<HomePage> {
                                         _isLeftHanded = value;
                                       });
                                     },
-                                    activeColor: Theme.of(context).primaryColor,
+                                    activeColor: Theme.of(context).primaryColorDark,
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: space),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '       아래쪽부터 입력',
+                                    style: Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                  CupertinoSwitch(
+                                    value: _isRtL,
+                                    onChanged: <bool>(value) {
+                                      setState(() {
+                                        _isRtL = value;
+                                      });
+                                    },
+                                    activeColor: Theme.of(context).primaryColorDark,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: space),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -189,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: space),
                               Text(
                                 '설정 변경 후 앱을 재시작 해주세요',
                                 style: TextStyle(

@@ -338,17 +338,60 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Provider.of<Setting>(context).getLeft()!
-                        ? Text(question, style: stageTextStyle)
+                    child: Provider.of<Setting>(context).getLeft()
+                        ? Column(
+                            children: [
+                              Text(question, style: stageTextStyle),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                //crossAxisAlignment: CrossAxisAlignment.baseline,
+                                //textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  const Text(
+                                    '= ',
+                                    style: TextStyle(fontSize: 40),
+                                  ),
+                                  SizedBox(
+                                    //height: 70,
+                                    width: answer.toString().length * 25 + 10,
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TextField(
+                                        scribbleEnabled: true,
+                                        readOnly: true,
+                                        controller: _textController,
+                                        maxLines: 1,
+                                        //maxLength: answer.toString().length,
+                                        //textAlign: TextAlign.center,
+                                        textAlign: TextAlign.end,
+                                        textAlignVertical: TextAlignVertical.center,
+                                        //expands: true,
+                                        //textCapitalization: TextCapitalization.words,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.only(left: 5, right: 5),
+                                          //counterText: '',
+                                        ),
+                                        style: const TextStyle(
+                                          fontSize: 40,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 35,
+                                  )
+                                ],
+                              ),
+                            ],
+                          )
                         : Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(
-                                  widget.type,
-                                  style: stageTextStyle,
-                                ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
@@ -356,55 +399,66 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                                       question.substring(0, widget.digital[0]),
                                       style: stageTextStyle,
                                     ),
-                                    Text(
-                                      question.substring(widget.digital[0] + 1),
-                                      style: stageTextStyle,
-                                    )
+                                    Row(
+                                      children: [
+                                        Text(
+                                          widget.type,
+                                          style: stageTextStyle,
+                                        ),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          question.substring(widget.digital[0] + 1),
+                                          style: stageTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      //crossAxisAlignment: CrossAxisAlignment.baseline,
+                                      //textBaseline: TextBaseline.alphabetic,
+                                      children: [
+                                        const Text(
+                                          '= ',
+                                          style: TextStyle(fontSize: 40),
+                                        ),
+                                        SizedBox(
+                                          //height: 70,
+                                          width: answer.toString().length * 25 + 10,
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: TextField(
+                                              scribbleEnabled: true,
+                                              readOnly: true,
+                                              controller: _textController,
+                                              maxLines: 1,
+                                              //maxLength: answer.toString().length,
+                                              //textAlign: TextAlign.center,
+                                              textAlign: TextAlign.end,
+                                              textAlignVertical: TextAlignVertical.center,
+                                              //expands: true,
+                                              //textCapitalization: TextCapitalization.words,
+                                              decoration: const InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                isDense: true,
+                                                contentPadding: EdgeInsets.only(left: 5, right: 5),
+                                                //counterText: '',
+                                              ),
+                                              style: const TextStyle(
+                                                fontSize: 40,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ],
+                                ),
+                                SizedBox(
+                                  width: answer.toString().length * 25,
                                 )
                               ],
                             ),
                           ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      const Text(
-                        '= ',
-                        style: TextStyle(fontSize: 40),
-                      ),
-                      SizedBox(
-                        //height: 70,
-                        width: answer.toString().length * 30 + 15,
-                        child: TextField(
-                          scribbleEnabled: true,
-                          readOnly: true,
-                          controller: _textController,
-                          maxLines: 1,
-                          //maxLength: answer.toString().length,
-                          //textAlign: TextAlign.center,
-                          textAlign: TextAlign.center,
-                          textAlignVertical: TextAlignVertical.center,
-                          //expands: true,
-                          //textCapitalization: TextCapitalization.words,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            isDense: true,
-                            contentPadding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                            //counterText: '',
-                          ),
-                          style: const TextStyle(
-                            fontSize: 40,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        ' =',
-                        style: TextStyle(fontSize: 40, color: Colors.grey.shade50),
-                      ),
-                    ],
                   ),
                 ],
               ),
@@ -464,12 +518,20 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
         onTap: () {
           HapticFeedback.mediumImpact();
           if (num == '←' && _textController.text.isNotEmpty) {
-            _textController.text =
-                _textController.text.substring(0, _textController.text.length - 1);
+            if (Provider.of<Setting>(context, listen: false).getRtL()) {
+              _textController.text = _textController.text.substring(1, _textController.text.length);
+            } else {
+              _textController.text =
+                  _textController.text.substring(0, _textController.text.length - 1);
+            }
           } else if (num == 'C') {
             _textController.clear();
           } else if (num != '←' && _textController.text.length < answer.toString().length) {
-            _textController.text += num;
+            if (Provider.of<Setting>(context, listen: false).getRtL()) {
+              _textController.text = num + _textController.text;
+            } else {
+              _textController.text += num;
+            }
             if (_textController.text == answer.toString()) {
               next(true);
             } else if (_textController.text != answer.toString() &&

@@ -16,12 +16,14 @@ Widget CustomText(String text) {
   );
 }
 
-Widget CustomListTile(Record recordData) {
+Widget CustomListTile(BuildContext context, Record recordData) {
   var percent = 10 * (recordData.correct / recordData.playCount);
-  List koreanNumber = ['한', '두', '세', '네'];
+  List koreanNumber = ['한자릿수', '두자릿수', '세자릿수', '네자릿수'];
   String type = recordData.name[0];
-  String second = koreanNumber[int.parse(recordData.name[5]) - 1];
-  String first = koreanNumber[int.parse(recordData.name[2]) - 1];
+  int f = int.parse(recordData.name[5]);
+  int s = int.parse(recordData.name[2]);
+  String second = koreanNumber[s - 1];
+  String first = koreanNumber[f - 1];
 
   return ClipRRect(
     borderRadius: BorderRadius.circular(20),
@@ -34,10 +36,39 @@ Widget CustomListTile(Record recordData) {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '${first}자릿수 ${type} ${second}자릿수  ',
-                style: TextStyle(fontSize: 20),
+              RichText(
+                text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontFamily: 'NanumSquare',
+                    ),
+                    children: [
+                      TextSpan(
+                          text: first.substring(0, f),
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColorDark,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      TextSpan(
+                          text: first.substring(f, 4), style: const TextStyle(color: Colors.grey)),
+                      TextSpan(
+                          text: ' $type ',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColorDark,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      TextSpan(
+                          text: second.substring(0, s),
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColorDark,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      TextSpan(
+                          text: second.substring(s, 4), style: const TextStyle(color: Colors.grey)),
+                    ]),
               ),
+              const SizedBox(height: 5),
               Text('시도 : ${recordData.playCount} / 정답률 : ${percent.toInt()}% / 최고'
                   ' 기록 : ${recordData.highScore}s')
             ],
@@ -82,7 +113,7 @@ class _RecordPageState extends State<RecordPage> {
                     itemBuilder: (context, int index) {
                       var recordData = records[index];
                       if (recordData.name != 'total') {
-                        return CustomListTile(recordData);
+                        return CustomListTile(context, recordData);
                       } else {
                         return const SizedBox(height: 0); // Total 때문에
                       }
