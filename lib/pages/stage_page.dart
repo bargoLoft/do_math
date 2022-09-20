@@ -350,7 +350,9 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                                     Row(
                                       children: [
                                         Text(
-                                          question.substring(0, widget.digital[0]),
+                                          (widget.type != '÷')
+                                              ? question.substring(0, widget.digital[0])
+                                              : questions[0].toString(),
                                           style: stageTextStyle,
                                         ),
                                         const SizedBox(width: 5),
@@ -364,7 +366,9 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                                         ),
                                         const SizedBox(width: 5),
                                         Text(
-                                          question.substring(widget.digital[0] + 1),
+                                          (widget.type != '÷')
+                                              ? question.substring(widget.digital[0] + 1)
+                                              : questions[1].toString(),
                                           style: stageTextStyle,
                                         ),
                                         const SizedBox(width: 5),
