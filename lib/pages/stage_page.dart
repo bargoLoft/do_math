@@ -16,11 +16,13 @@ class StagePage extends StatefulWidget {
   String type;
   int count;
   List digital;
+  double timeLimit;
 
   StagePage({
     required this.type,
     required this.digital,
     required this.count,
+    required this.timeLimit,
     Key? key,
   }) : super(key: key);
 
@@ -45,8 +47,9 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     startTimer();
+
     _countController =
-        AnimationController(vsync: this, duration: const Duration(seconds: limitTime));
+        AnimationController(vsync: this, duration: Duration(seconds: widget.timeLimit.round()));
     _countController.addListener(() {
       if (_countController.isCompleted) {
         next(false);
@@ -97,7 +100,7 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     _countController.forward();
     currentNumber += 1;
     if (oX) currentAnswer++;
-    if (currentNumber == 10) {
+    if (currentNumber == 5) {
       // 테스트용 문제 개수 10개로 늘려야 함
       // 문제 다 풀면.
       _countController.stop();
@@ -322,7 +325,9 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                   height: 2,
                   color: Colors.green,
                 ),
-                Countdown(animation: StepTween(begin: limitTime, end: 0).animate(_countController)),
+                Countdown(
+                    animation: StepTween(begin: widget.timeLimit.round(), end: 0)
+                        .animate(_countController)),
                 if (Provider.of<Setting>(context).getAutoFocus()) Text('${duration.inSeconds}'),
               ],
             ),
@@ -333,10 +338,33 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      question,
-                      style: const TextStyle(fontSize: 40, letterSpacing: 2),
-                    ),
+                    child: Provider.of<Setting>(context).getLeft()!
+                        ? Text(question, style: stageTextStyle)
+                        : Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  widget.type,
+                                  style: stageTextStyle,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      question.substring(0, widget.digital[0]),
+                                      style: stageTextStyle,
+                                    ),
+                                    Text(
+                                      question.substring(widget.digital[0] + 1),
+                                      style: stageTextStyle,
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

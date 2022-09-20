@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../const/const.dart';
 import '../models/record.dart';
+import '../provider/settingProvider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -17,6 +18,11 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
+}
+
+class SliderController {
+  double sliderValue;
+  SliderController(this.sliderValue);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -81,6 +87,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void showBottomSheet(BuildContext context) {
+    SliderController sliderController =
+        SliderController(Provider.of<Setting>(context, listen: false).getTimeLimit());
+
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -94,7 +103,7 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context, StateSetter setState) {
               return Consumer(
                 builder: (context, appModel, child) => Container(
-                  height: 230,
+                  height: 300,
                   color: Colors.white,
                   child: Center(
                     child: Column(
@@ -116,7 +125,6 @@ class _HomePageState extends State<HomePage> {
                                     onChanged: <bool>(value) {
                                       setState(() {
                                         _autoFocus = value;
-                                        _prefs.setBool('autoFocus', _autoFocus);
                                       });
                                     },
                                     activeColor: Theme.of(context).primaryColor,
@@ -128,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '왼손잡이입니까?',
+                                    '가로셈 방식',
                                     style: Theme.of(context).textTheme.bodyLarge,
                                   ),
                                   CupertinoSwitch(
@@ -136,10 +144,48 @@ class _HomePageState extends State<HomePage> {
                                     onChanged: <bool>(value) {
                                       setState(() {
                                         _isLeftHanded = value;
-                                        _prefs.setBool('left', _isLeftHanded);
                                       });
                                     },
                                     activeColor: Theme.of(context).primaryColor,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: Text(
+                                      '제한 시간 조절',
+                                      style: Theme.of(context).textTheme.bodyLarge,
+                                    ),
+                                  ),
+                                  SliderTheme(
+                                    data: SliderThemeData(
+                                      activeTrackColor: Theme.of(context).primaryColorDark,
+                                      thumbColor: Theme.of(context).primaryColorDark,
+                                      activeTickMarkColor: Theme.of(context).primaryColorDark,
+                                      valueIndicatorColor: Theme.of(context).primaryColorDark,
+                                      thumbShape: const RoundSliderThumbShape(
+                                        enabledThumbRadius: 10,
+                                        disabledThumbRadius: 12,
+                                        elevation: 2,
+                                      ),
+                                      valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
+                                    ),
+                                    child: Slider(
+                                        min: 5.0,
+                                        max: 50.0,
+                                        value: sliderController.sliderValue,
+                                        label: sliderController.sliderValue.round().toString(),
+                                        divisions: 9,
+                                        onChanged: (double newValue) {
+                                          setState(() {
+                                            sliderController.sliderValue = newValue;
+                                          });
+                                        }),
                                   ),
                                 ],
                               ),
@@ -155,7 +201,13 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         ElevatedButton(
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () {
+                            Provider.of<Setting>(context, listen: false)
+                                .setTimeLimit(sliderController.sliderValue);
+                            Provider.of<Setting>(context, listen: false).setAutoFocus(_autoFocus);
+                            Provider.of<Setting>(context, listen: false).setLeft(_isLeftHanded);
+                            Navigator.pop(context);
+                          },
                           style: ButtonStyle(
                             foregroundColor:
                                 MaterialStateProperty.all(Theme.of(context).primaryColorDark),
@@ -195,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -545,6 +597,7 @@ class _HomePageState extends State<HomePage> {
                           type: type,
                           digital: [digitalIndex_1 + 1, digitalIndex_2 + 1],
                           count: 2,
+                          timeLimit: Provider.of<Setting>(context).getTimeLimit(),
                         )));
           },
           style: ButtonStyle(
@@ -594,6 +647,7 @@ class _HomePageState extends State<HomePage> {
                           type: type,
                           digital: [digitalIndex_1 + 1, digitalIndex_2 + 1],
                           count: 2,
+                          timeLimit: Provider.of<Setting>(context).getTimeLimit(),
                         )));
           },
           style: ButtonStyle(

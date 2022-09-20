@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:do_math/pages/home_page.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +16,7 @@ void main() async {
   Hive.registerAdapter(RecordAdapter());
   await Hive.openBox<Record>('record');
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
+  await Future.delayed(const Duration(seconds: 1)).then((value) => FlutterNativeSplash.remove());
   runApp(
     MultiProvider(providers: [
       //ChangeNotifierProvider(create: (context) => QuestionProvider()),
@@ -23,6 +24,7 @@ void main() async {
           create: (context) => Setting(
                 (prefs.getBool('autoFocus')) ?? false,
                 (prefs.getBool('left')) ?? false,
+                (prefs.getDouble('timeLimit')) ?? 10.0,
               )),
     ], child: const MyApp()),
   );
