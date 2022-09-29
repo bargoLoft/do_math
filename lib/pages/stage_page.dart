@@ -8,6 +8,7 @@ import 'package:do_math/widgets/count_down.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
 
 import '../provider/settingProvider.dart';
 
@@ -30,7 +31,7 @@ class StagePage extends StatefulWidget {
   State<StagePage> createState() => _StagePageState();
 }
 
-class _StagePageState extends State<StagePage> with SingleTickerProviderStateMixin {
+class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
   final _textController = TextEditingController();
   late AnimationController _countController;
 
@@ -216,28 +217,50 @@ class _StagePageState extends State<StagePage> with SingleTickerProviderStateMix
     print('${questions.toString()} $answer');
   }
 
+  Widget _buildLottie(String assetName) {
+    AnimationController lottieController = AnimationController(vsync: this);
+    return Lottie.asset(
+      'assets/lotties/$assetName.json',
+      repeat: false,
+      height: 200,
+      width: 170,
+      fit: BoxFit.fill,
+      controller: lottieController,
+      onLoaded: (composition) {
+        // Configure the AnimationController with the duration of the
+        // Lottie file and start the animation.
+        lottieController
+          ..duration = composition.duration
+          ..forward();
+      },
+    );
+  }
+
   void showResultPopup() {
     showDialog(
         context: context,
-        barrierColor: Colors.white.withOpacity(0.9),
+        barrierColor: Colors.black.withOpacity(0.2),
         barrierDismissible: false,
         builder: (BuildContext context) {
+          List medalColor = ['copper', 'silver', 'gold'];
           return Dialog(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Colors.white,
+            elevation: 5,
             shape:
                 const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50.0))),
             child: AspectRatio(
-              aspectRatio: 10 / 11,
+              aspectRatio: 10 / 15,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    _buildLottie(medalColor[currentAnswer ~/ 4]),
                     RichText(
                       text: TextSpan(
                         text: currentAnswer.toString(),
                         style: TextStyle(
-                          fontSize: 100,
+                          fontSize: 50,
                           color:
                               currentAnswer >= 4 ? Theme.of(context).primaryColorDark : Colors.red,
                         ),

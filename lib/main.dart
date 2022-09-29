@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:do_math/pages/home_page.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +15,7 @@ void main() async {
   Hive.registerAdapter(RecordAdapter());
   await Hive.openBox<Record>('record');
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await Future.delayed(const Duration(seconds: 1)).then((value) => FlutterNativeSplash.remove());
+  //await Future.delayed(const Duration(seconds: 1)).then((value) => FlutterNativeSplash.remove());
   runApp(
     MultiProvider(providers: [
       //ChangeNotifierProvider(create: (context) => QuestionProvider()),
@@ -37,6 +36,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+    //   statusBarColor: Colors.black,
+    //   statusBarIconBrightness: Brightness.dark,
+    //   systemNavigationBarColor: Colors.black,
+    // ));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '두수앞',
