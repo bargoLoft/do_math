@@ -21,13 +21,14 @@ class RecordAdapter extends TypeAdapter<Record> {
       fields[1] as int,
       fields[2] as int,
       fields[3] as double,
+      (fields[4] as List?)?.cast<double>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Record obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class RecordAdapter extends TypeAdapter<Record> {
       ..writeByte(2)
       ..write(obj.correct)
       ..writeByte(3)
-      ..write(obj.highScore);
+      ..write(obj.highScore)
+      ..writeByte(4)
+      ..write(obj.last10Score);
   }
 
   @override
@@ -44,7 +47,5 @@ class RecordAdapter extends TypeAdapter<Record> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RecordAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      other is RecordAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

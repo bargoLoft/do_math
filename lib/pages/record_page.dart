@@ -2,6 +2,8 @@ import 'package:do_math/models/record.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../widgets/fl_chart.dart';
+
 class RecordPage extends StatefulWidget {
   const RecordPage({Key? key}) : super(key: key);
 
@@ -31,49 +33,53 @@ Widget CustomListTile(BuildContext context, Record recordData) {
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
       child: Container(
         color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        child: ExpansionTile(
+            expandedAlignment: Alignment.centerLeft,
+            expandedCrossAxisAlignment: CrossAxisAlignment.start,
+            title: RichText(
+              text: TextSpan(
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                    fontFamily: 'NanumSquare',
+                  ),
+                  children: [
+                    TextSpan(
+                        text: first.substring(0, f),
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    TextSpan(
+                        text: first.substring(f, 4), style: const TextStyle(color: Colors.grey)),
+                    TextSpan(
+                        text: ' $type ',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    TextSpan(
+                        text: second.substring(0, s),
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    TextSpan(
+                        text: second.substring(s, 4), style: const TextStyle(color: Colors.grey)),
+                  ]),
+            ),
+            subtitle: Text('시도 : ${recordData.playCount} / 정답률 : ${percent.toInt()}% / 최고'
+                ' 기록 : ${recordData.highScore}s'),
             children: [
-              RichText(
-                text: TextSpan(
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontFamily: 'NanumSquare',
-                    ),
-                    children: [
-                      TextSpan(
-                          text: first.substring(0, f),
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColorDark,
-                            fontWeight: FontWeight.bold,
-                          )),
-                      TextSpan(
-                          text: first.substring(f, 4), style: const TextStyle(color: Colors.grey)),
-                      TextSpan(
-                          text: ' $type ',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColorDark,
-                            fontWeight: FontWeight.bold,
-                          )),
-                      TextSpan(
-                          text: second.substring(0, s),
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColorDark,
-                            fontWeight: FontWeight.bold,
-                          )),
-                      TextSpan(
-                          text: second.substring(s, 4), style: const TextStyle(color: Colors.grey)),
-                    ]),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text('최근 5게임 기록'),
               ),
-              const SizedBox(height: 5),
-              Text('시도 : ${recordData.playCount} / 정답률 : ${percent.toInt()}% / 최고'
-                  ' 기록 : ${recordData.highScore}s')
-            ],
-          ),
-        ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: BarChartSample3(last10: recordData.last10Score ?? [0, 0, 0, 0, 0]),
+              ),
+            ]),
       ),
     ),
   );
@@ -98,7 +104,7 @@ class _RecordPageState extends State<RecordPage> {
       child: ValueListenableBuilder<Box<Record>>(
         valueListenable: Hive.box<Record>('record').listenable(),
         builder: (context, record, _) {
-          var records = record.values.toList().cast<Record>();
+          List<Record> records = record.values.toList().cast<Record>();
           //var totalRecord = record.get('total');
           records.sort((a, b) => a.name.compareTo(b.name));
           if (records.isEmpty) {

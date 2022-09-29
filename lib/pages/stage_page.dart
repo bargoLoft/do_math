@@ -34,6 +34,7 @@ class StagePage extends StatefulWidget {
 class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
   final _textController = TextEditingController();
   late AnimationController _countController;
+  late AnimationController lottieController;
 
   late List<int> questions;
   String question = '';
@@ -56,6 +57,7 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
         next(false);
       }
     });
+    lottieController = AnimationController(vsync: this);
     _countController.forward();
     getNewQuestion();
   }
@@ -70,6 +72,7 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
       _countController.dispose();
     }
     timer?.cancel();
+    lottieController.dispose();
     super.dispose();
   }
 
@@ -114,11 +117,11 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
       var box = await Hive.openBox<Record>('record');
       Record? record = box.get(
         '${widget.type}${widget.digital}',
-        defaultValue: Record('${widget.type}${widget.digital}', 0, 0, 1000.0),
+        defaultValue: Record('${widget.type}${widget.digital}', 0, 0, 1000.0, null),
       );
       Record? totalRecord = box.get(
         'total',
-        defaultValue: Record('total', 0, 0, 0),
+        defaultValue: Record('total', 0, 0, 0, null),
       );
       totalRecord?.playCount += 1;
       totalRecord?.correct += currentAnswer;
@@ -131,6 +134,15 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
         record.highScore = duration.inSeconds / 100;
         print(record.highScore);
       }
+      if (record.last10Score == null) {
+        record.last10Score = [duration.inSeconds / 100, 0, 0, 0, 0];
+      } else {
+        record.last10Score?.insert(0, duration.inSeconds / 100);
+      }
+      if ((record.last10Score?.length ?? 0) > 5) {
+        record.last10Score?.removeAt(5);
+      }
+
       box.put('${widget.type}${widget.digital}', record);
       print('${record.name}/${record.playCount}/${record.correct}/${record.highScore}');
       box.put('total', totalRecord!);
@@ -218,7 +230,7 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
   }
 
   Widget _buildLottie(String assetName) {
-    AnimationController lottieController = AnimationController(vsync: this);
+    lottieController = AnimationController(vsync: this);
     return Lottie.asset(
       'assets/lotties/$assetName.json',
       repeat: false,

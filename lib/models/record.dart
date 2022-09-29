@@ -16,5 +16,8 @@ class Record extends HiveObject {
   @HiveField(3)
   double highScore;
 
-  Record(this.name, this.playCount, this.correct, this.highScore);
+  @HiveField(4)
+  List<double>? last10Score;
+
+  Record(this.name, this.playCount, this.correct, this.highScore, this.last10Score);
 }
