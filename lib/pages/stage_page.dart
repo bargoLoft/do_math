@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../provider/settingProvider.dart';
 
@@ -18,12 +19,14 @@ class StagePage extends StatefulWidget {
   int count;
   List digital;
   double timeLimit;
+  bool isChallenge;
 
   StagePage({
     required this.type,
     required this.digital,
     required this.count,
     required this.timeLimit,
+    required this.isChallenge,
     Key? key,
   }) : super(key: key);
 
@@ -44,6 +47,13 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
 
   Duration duration = const Duration();
   Timer? timer;
+
+  List<Color> medalColor = [
+    const Color(0xffFFD700),
+    const Color(0xffA3A3A3),
+    const Color(0xffCD7F32),
+    Colors.transparent,
+  ];
 
   @override
   void initState() {
@@ -148,6 +158,20 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
       box.put('total', totalRecord!);
       print(
           '${totalRecord.name}/${totalRecord.playCount}/${totalRecord.correct}/${totalRecord.highScore}');
+
+      //챌린지 시 은메달 이상이면 통과
+      if (widget.isChallenge &&
+          medalColorCalculator(
+                  type: widget.type,
+                  index1: widget.digital[0],
+                  index2: widget.digital[1],
+                  highScore: duration.inSeconds / 100) <
+              2) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        Provider.of<Setting>(context, listen: false).loadSharedPrefs();
+        Provider.of<Setting>(context, listen: false)
+            .setChallengeStage((prefs.getInt('challenge') ?? 0) + 1);
+      }
       showResultPopup();
     } else {
       getNewQuestion();
@@ -228,12 +252,15 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
     }
     print('${questions.toString()} $answer');
   }
+  // medalColor(type: widget.type,index1: widget.digital[0],index2:
+  // widget.digital[1],highScore: duration.inSeconds / 100),
 
   Widget _buildLottie(String assetName) {
     lottieController = AnimationController(vsync: this);
     return Lottie.asset(
       'assets/lotties/$assetName.json',
       repeat: false,
+      animate: true,
       height: 200,
       width: 170,
       fit: BoxFit.fill,
@@ -244,8 +271,34 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
         lottieController
           ..duration = composition.duration
           ..forward();
+        if (lottieController.isCompleted) {
+          lottieController.dispose();
+        }
       },
     );
+  }
+
+  int medalColorCalculator(
+      {required String type, required int index1, required int index2, required double highScore}) {
+    double defaultTime = 4;
+    if (type == '+' || type == '-') {
+      defaultTime += 2 * (index1 + index2);
+    }
+
+    if (type == '×' || type == '÷') {
+      defaultTime += 4;
+      defaultTime *= index1 + index2 - 1;
+    }
+
+    if (highScore < defaultTime) {
+      return 0;
+    } else if (highScore < defaultTime + 2) {
+      return 1;
+    } else if (highScore < defaultTime + 4) {
+      return 2;
+    } else {
+      return 2;
+    }
   }
 
   void showResultPopup() {
@@ -254,7 +307,7 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
         barrierColor: Colors.black.withOpacity(0.2),
         barrierDismissible: false,
         builder: (BuildContext context) {
-          List medalColor = ['copper', 'silver', 'gold'];
+          List medalColor = ['gold', 'silver', 'copper'];
           return Dialog(
             backgroundColor: Colors.white,
             elevation: 5,
@@ -267,7 +320,11 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildLottie(medalColor[currentAnswer ~/ 4]),
+                    _buildLottie(medalColor[medalColorCalculator(
+                        type: widget.type,
+                        index1: widget.digital[0],
+                        index2: widget.digital[1],
+                        highScore: duration.inSeconds / 100)]),
                     RichText(
                       text: TextSpan(
                         text: currentAnswer.toString(),
@@ -286,7 +343,10 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                    Text('걸린 시간 : ${(duration.inSeconds / 100).toString().padLeft(2, '0')}s'),
+                    Text(
+                      '걸린 시간 : ${(duration.inSeconds / 100).toString().padLeft(2, '0')}s',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -300,19 +360,38 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
                           },
                           icon: const Icon(Icons.home_rounded),
                         ),
-                        IconButton(
-                          iconSize: 60,
-                          onPressed: () {
-                            Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
-                            refreshStage();
-                          },
-                          icon: const Icon(Icons.refresh_rounded),
-                        ),
+                        (widget.isChallenge &&
+                                medalColorCalculator(
+                                        type: widget.type,
+                                        index1: widget.digital[0],
+                                        index2: widget.digital[1],
+                                        highScore: duration.inSeconds / 100) <
+                                    2)
+                            ? IconButton(
+                                iconSize: 60,
+                                onPressed: () {
+                                  Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
+                                  Challenge challenge = challenges[
+                                      Provider.of<Setting>(context, listen: false)
+                                          .getChallengeStage()];
+                                  widget.type = challenge.type;
+                                  widget.digital = [challenge.index1, challenge.index2];
+                                  refreshStage();
+                                },
+                                icon: const Icon(Icons.arrow_forward_rounded))
+                            : IconButton(
+                                iconSize: 60,
+                                onPressed: () {
+                                  Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
+                                  refreshStage();
+                                },
+                                icon: const Icon(Icons.refresh_rounded),
+                              ),
                         IconButton(
                           iconSize: 30,
                           onPressed: () {
-                            Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
                             Navigator.pop(context);
+                            Navigator.pushNamed(context, 'record'); // pushNamed로 한 번에 가도록 변경
                           },
                           icon: const Icon(Icons.leaderboard_rounded),
                         ),

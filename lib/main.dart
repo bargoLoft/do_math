@@ -25,6 +25,7 @@ void main() async {
                 (prefs.getBool('left')) ?? false,
                 (prefs.getBool('rtl')) ?? false,
                 (prefs.getDouble('timeLimit')) ?? 10.0,
+                (prefs.getInt('challenge')) ?? 0,
               )),
     ], child: const MyApp()),
   );

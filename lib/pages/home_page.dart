@@ -634,9 +634,9 @@ class _HomePageState extends State<HomePage> {
         child: BottomNavigationBar(
           iconSize: 23,
           items: <BottomNavigationBarItem>[
-            buildBottomNavigationBarItem(icon: const Icon(Icons.leaderboard), label: 'home'),
-            buildBottomNavigationBarItem(icon: const Icon(Icons.home_filled), label: 'storage'),
-            buildBottomNavigationBarItem(icon: const Icon(Icons.settings), label: 'write'),
+            buildBottomNavigationBarItem(icon: const Icon(Icons.leaderboard), label: 'record'),
+            buildBottomNavigationBarItem(icon: const Icon(Icons.home_filled), label: 'home'),
+            buildBottomNavigationBarItem(icon: const Icon(Icons.settings), label: 'setting'),
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: Theme.of(context).primaryColorDark,
@@ -661,7 +661,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(8.0),
         child: icon,
       ),
-      label: '',
+      label: label,
     );
   }
 
@@ -784,6 +784,7 @@ class _HomePageState extends State<HomePage> {
                           digital: [digitalIndex_1 + 1, digitalIndex_2 + 1],
                           count: 2,
                           timeLimit: Provider.of<Setting>(context).getTimeLimit() + 1,
+                          isChallenge: false,
                         )));
           },
           style: ButtonStyle(
@@ -836,6 +837,7 @@ class _HomePageState extends State<HomePage> {
                           digital: [digitalIndex_1 + 1, digitalIndex_2 + 1],
                           count: 2,
                           timeLimit: Provider.of<Setting>(context).getTimeLimit(),
+                          isChallenge: false,
                         )));
           },
           style: ButtonStyle(
@@ -887,16 +889,33 @@ class _HomePageState extends State<HomePage> {
         aspectRatio: ratio,
         child: ElevatedButton(
           onPressed: () {
-            Fluttertoast.showToast(
-              msg: "준비중입니다",
-              gravity: ToastGravity.BOTTOM,
-              backgroundColor: Colors.white,
-              textColor: Theme.of(context).primaryColorDark,
-              fontSize: 12.0,
-              toastLength: Toast.LENGTH_LONG,
-              timeInSecForIosWeb: 1,
-              webShowClose: false,
-            );
+            int currentChallenge = Provider.of<Setting>(context, listen: false).getChallengeStage();
+            if (title == '챌린지') {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => StagePage(
+                            type: challenges[currentChallenge].type,
+                            digital: [
+                              challenges[currentChallenge].index1,
+                              challenges[currentChallenge].index2,
+                            ],
+                            count: 2,
+                            timeLimit:
+                                Provider.of<Setting>(context, listen: false).getTimeLimit() + 1,
+                            isChallenge: true,
+                          )));
+            }
+            // Fluttertoast.showToast(
+            //   msg: "준비중입니다",
+            //   gravity: ToastGravity.BOTTOM,
+            //   backgroundColor: Colors.white,
+            //   textColor: Theme.of(context).primaryColorDark,
+            //   fontSize: 12.0,
+            //   toastLength: Toast.LENGTH_LONG,
+            //   timeInSecForIosWeb: 1,
+            //   webShowClose: false,
+            // );
             //await으로 맞춘개수, 걸린 시간, 문제 유형 받아와서 기록.
             // Navigator.push(
             //     context,

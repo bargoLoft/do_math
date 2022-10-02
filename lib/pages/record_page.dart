@@ -20,7 +20,7 @@ Widget CustomText(String text) {
   );
 }
 
-Widget CustomListTile(BuildContext context, Record recordData) {
+Widget customListTile(BuildContext context, Record recordData) {
   var percent = 10 * (recordData.correct / recordData.playCount);
   List koreanNumber = ['한자릿수', '두자릿수', '세자릿수', '네자릿수'];
   String type = recordData.name[0];
@@ -101,10 +101,10 @@ Widget CustomListTile(BuildContext context, Record recordData) {
                         text: second.substring(s, 4), style: const TextStyle(color: Colors.grey)),
                   ]),
             ),
-            subtitle: Text('| 시도 : ${recordData.playCount.toString().padLeft(3)} | 정답률 : '
+            subtitle: Text('시도 : ${recordData.playCount.toString().padLeft(3)} | 정답률 : '
                 '${percent.toInt().toString().padLeft(3)}% |'
                 ' 최고'
-                ' 기록 : ${recordData.highScore.toString().padLeft(5)}s |'),
+                ' 기록 : ${recordData.highScore.toString().padLeft(5)}s '),
             children: [
               const Padding(
                 padding: EdgeInsets.all(10.0),
@@ -176,7 +176,7 @@ class _RecordPageState extends State<RecordPage> {
                             itemBuilder: (context, int index) {
                               var recordData = records[index];
                               if (recordData.name != 'total') {
-                                return CustomListTile(context, recordData);
+                                return customListTile(context, recordData);
                               } else {
                                 return const SizedBox(height: 0); // Total 때문에
                               }
