@@ -1,12 +1,18 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class _BarChart extends StatelessWidget {
+class _BarChart extends StatefulWidget {
   List<double> last10Score;
   _BarChart({required this.last10Score, Key? key}) : super(key: key);
 
   @override
+  State<_BarChart> createState() => _BarChartState();
+}
+
+class _BarChartState extends State<_BarChart> {
+  @override
   Widget build(BuildContext context) {
+    var max = widget.last10Score.reduce((value, element) => value > element ? value : element);
     return BarChart(
       BarChartData(
         barTouchData: barTouchData,
@@ -15,7 +21,7 @@ class _BarChart extends StatelessWidget {
         barGroups: barGroups,
         gridData: FlGridData(show: false),
         alignment: BarChartAlignment.spaceAround,
-        maxY: 15,
+        maxY: max * 1.3,
       ),
     );
   }
@@ -130,7 +136,7 @@ class _BarChart extends StatelessWidget {
           x: 0,
           barRods: [
             BarChartRodData(
-              toY: last10Score[0],
+              toY: widget.last10Score[0],
               gradient: _barsGradient,
             )
           ],
@@ -141,7 +147,7 @@ class _BarChart extends StatelessWidget {
           x: 1,
           barRods: [
             BarChartRodData(
-              toY: last10Score[1],
+              toY: widget.last10Score[1],
               gradient: _barsGradient,
             )
           ],
@@ -152,7 +158,7 @@ class _BarChart extends StatelessWidget {
           x: 2,
           barRods: [
             BarChartRodData(
-              toY: last10Score[2],
+              toY: widget.last10Score[2],
               gradient: _barsGradient,
             )
           ],
@@ -163,7 +169,7 @@ class _BarChart extends StatelessWidget {
           x: 3,
           barRods: [
             BarChartRodData(
-              toY: last10Score[3],
+              toY: widget.last10Score[3],
               gradient: _barsGradient,
             )
           ],
@@ -174,7 +180,7 @@ class _BarChart extends StatelessWidget {
           x: 4,
           barRods: [
             BarChartRodData(
-              toY: last10Score[4],
+              toY: widget.last10Score[4],
               gradient: _barsGradient,
             )
           ],

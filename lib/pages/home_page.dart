@@ -783,7 +783,7 @@ class _HomePageState extends State<HomePage> {
                           type: type,
                           digital: [digitalIndex_1 + 1, digitalIndex_2 + 1],
                           count: 2,
-                          timeLimit: Provider.of<Setting>(context).getTimeLimit(),
+                          timeLimit: Provider.of<Setting>(context).getTimeLimit() + 1,
                         )));
           },
           style: ButtonStyle(
