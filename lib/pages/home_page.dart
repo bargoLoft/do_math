@@ -935,10 +935,17 @@ class _HomePageState extends State<HomePage> {
             shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(13.0))),
           ),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: textSize, height: 2, color: Colors.grey.shade300),
+          child: Wrap(
+            direction: Axis.vertical,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(
+                title,
+                textAlign: TextAlign.center, style: const TextStyle(fontSize: 17),
+                //style: TextStyle(fontSize: textSize, height: 2, color: Colors.grey.shade300),
+              ),
+              Text('Level ${Provider.of<Setting>(context).getChallengeStage().toString()}'),
+            ],
           ),
         ),
       ),

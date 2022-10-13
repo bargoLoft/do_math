@@ -1,5 +1,7 @@
+import 'package:do_math/firebase_options.dart';
 import 'package:do_math/models/record.dart';
 import 'package:do_math/provider/settingProvider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:do_math/pages/home_page.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +18,9 @@ void main() async {
   await Hive.openBox<Record>('record');
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   //await Future.delayed(const Duration(seconds: 1)).then((value) => FlutterNativeSplash.remove());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiProvider(providers: [
       //ChangeNotifierProvider(create: (context) => QuestionProvider()),

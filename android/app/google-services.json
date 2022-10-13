@@ -1,78 +1,34 @@
 {
   "project_info": {
-    "project_number": "33898045138",
-    "firebase_url": "https://hadamath-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "hadamath",
-    "storage_bucket": "hadamath.appspot.com"
+    "project_number": "506054873697",
+    "project_id": "domath-5f2ca",
+    "storage_bucket": "domath-5f2ca.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:33898045138:android:cec9c7e2776d1d0932970b",
+        "mobilesdk_app_id": "1:506054873697:android:95bf6ddbe354b0f6f41020",
         "android_client_info": {
-          "package_name": "com.bargoLoft.hada_math"
+          "package_name": "com.bargoLoft.do_math"
         }
       },
       "oauth_client": [
         {
-          "client_id": "33898045138-mc42n6b266so47lqlm139hqdudroqu05.apps.googleusercontent.com",
+          "client_id": "506054873697-eb47nb269jeg6ctou16v5gmjq3rkdrh1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDuY0RN-yAcnqtPx2kDC_CO3xsmSR0-RR8"
+          "current_key": "AIzaSyBs6WFMTqduKjyuH1K3j1WC9qxU_4dxjII"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "33898045138-mc42n6b266so47lqlm139hqdudroqu05.apps.googleusercontent.com",
+              "client_id": "506054873697-eb47nb269jeg6ctou16v5gmjq3rkdrh1.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "33898045138-2prp0gj2hsi4bo6dril8e65db5n6maf9.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.bargoLoft.hadaMath"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:33898045138:android:1b5a6e10d3da53b832970b",
-        "android_client_info": {
-          "package_name": "com.example.do_math"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "33898045138-mc42n6b266so47lqlm139hqdudroqu05.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDuY0RN-yAcnqtPx2kDC_CO3xsmSR0-RR8"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "33898045138-mc42n6b266so47lqlm139hqdudroqu05.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "33898045138-2prp0gj2hsi4bo6dril8e65db5n6maf9.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.bargoLoft.hadaMath"
-              }
             }
           ]
         }
