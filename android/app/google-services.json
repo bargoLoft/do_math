@@ -29,6 +29,13 @@
             {
               "client_id": "506054873697-eb47nb269jeg6ctou16v5gmjq3rkdrh1.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "506054873697-7kjjb1loenivkifuh21c90lrrjv7hfqu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bargoLoft.domath"
+              }
             }
           ]
         }

@@ -1,4 +1,3 @@
-import 'package:do_math/firebase_options.dart';
 import 'package:do_math/models/record.dart';
 import 'package:do_math/provider/settingProvider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:do_math/pages/home_page.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
+import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

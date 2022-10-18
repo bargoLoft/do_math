@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:do_math/pages/ranking_page.dart';
 import 'package:do_math/pages/record_page.dart';
 import 'package:do_math/pages/stage_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,7 +48,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _loadCounter();
+    _login();
     super.initState();
+  }
+
+  void _login() {
+    //CollectionReference product = FirebaseFirestore.instance.collection('users');
   }
 
   onWillPop() {
@@ -905,6 +912,8 @@ class _HomePageState extends State<HomePage> {
                                 Provider.of<Setting>(context, listen: false).getTimeLimit() + 1,
                             isChallenge: true,
                           )));
+            } else if (title == '랭킹') {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const RankingPage()));
             }
             // Fluttertoast.showToast(
             //   msg: "준비중입니다",
@@ -927,7 +936,7 @@ class _HomePageState extends State<HomePage> {
             //             )));
           },
           style: ButtonStyle(
-            overlayColor: MaterialStateProperty.all(Colors.red.shade50),
+            overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColorLight),
             padding: MaterialStateProperty.all(EdgeInsets.zero),
             elevation: MaterialStateProperty.all(0),
             backgroundColor: MaterialStateProperty.all(Colors.white),
@@ -944,7 +953,12 @@ class _HomePageState extends State<HomePage> {
                 textAlign: TextAlign.center, style: const TextStyle(fontSize: 17),
                 //style: TextStyle(fontSize: textSize, height: 2, color: Colors.grey.shade300),
               ),
-              Text('Level ${Provider.of<Setting>(context).getChallengeStage().toString()}'),
+              if (title == '챌린지')
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Text(
+                      'Level ${(Provider.of<Setting>(context).getChallengeStage() + 1).toString()}'),
+                ),
             ],
           ),
         ),

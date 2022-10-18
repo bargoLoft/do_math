@@ -36,3 +36,5 @@ List<Challenge> challenges = [
   Challenge('×', 2, 2),
   Challenge('÷', 2, 2),
 ];
+
+List<String> nickname = ['이걸 그냥 이름 값만 받아올까?'];
