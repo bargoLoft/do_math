@@ -30,6 +30,7 @@ void main() async {
                 (prefs.getBool('rtl')) ?? false,
                 (prefs.getDouble('timeLimit')) ?? 10.0,
                 (prefs.getInt('challenge')) ?? 0,
+                (prefs.getString('nickName')) ?? '',
               )),
     ], child: const MyApp()),
   );

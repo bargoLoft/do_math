@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
 import 'package:do_math/const/const.dart';
@@ -140,7 +141,10 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
 
       record?.playCount += 1;
       record?.correct += currentAnswer;
+      // 자신 최고 기록 갱신하면.. Hive에 적용하고 서버로 전송.
       if (duration.inSeconds / 100 < record!.highScore) {
+        CollectionReference rankProduct = FirebaseFirestore.instance.collection('ranking');
+
         record.highScore = duration.inSeconds / 100;
         print(record.highScore);
       }

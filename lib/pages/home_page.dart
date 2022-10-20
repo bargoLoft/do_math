@@ -5,6 +5,7 @@ import 'package:do_math/pages/stage_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,13 +48,56 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _loadCounter();
-    _login();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadCounter();
+      if (Provider.of<Setting>(context, listen: false).getNickName() != '') {
+        _login();
+      }
+    });
+
     super.initState();
   }
 
   void _login() {
-    //CollectionReference product = FirebaseFirestore.instance.collection('users');
+    CollectionReference usersProduct = FirebaseFirestore.instance.collection('users');
+    CollectionReference countProduct = FirebaseFirestore.instance.collection('count');
+    TextEditingController nameController = TextEditingController();
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            //icon: const Icon(FontAwesomeIcons.pencil),
+            content: Text('닉네임을 입력하시오'),
+            actions: [
+              TextField(
+                textAlign: TextAlign.center,
+                controller: nameController,
+                decoration: const InputDecoration.collapsed(hintText: '2글자 이상 한글만 가능합니다'),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () async {
+                  if (nameController.text != '' && nameController.text.length >= 2) {
+                    final String name = nameController.text;
+                    var count = await countProduct.doc('IQyr8ylH1NPSabBotOpW').get();
+                    int count1 = count['count'];
+                    await usersProduct.add({'name': name, 'exp': 0, 'id': count1});
+                    countProduct.doc('IQyr8ylH1NPSabBotOpW').update({'count': count1 + 1});
+                    Provider.of<Setting>(context, listen: false).setNickName(name);
+                    nameController.text = '';
+                    Navigator.pop(context);
+                  } else {
+                    SnackBar(
+                      content: Text('입력해주세요'),
+                    );
+                  }
+                },
+                child: const Center(child: Text('확인')),
+              )
+            ],
+          );
+        });
   }
 
   onWillPop() {
@@ -364,12 +408,12 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           total == null
-              ? const Text(
-                  'Lv.0',
+              ? Text(
+                  '${Provider.of<Setting>(context).getNickName()} Lv.0',
                   style: TextStyle(fontSize: 8),
                 )
               : Text(
-                  'Lv.${(total.highScore) ~/ 100} ${((total.highScore) % 100).toInt()}%',
+                  '${Provider.of<Setting>(context).getNickName()} Lv.${(total.highScore) ~/ 100} ${((total.highScore) % 100).toInt()}%',
                   style: const TextStyle(fontSize: 8),
                 ),
         ],
