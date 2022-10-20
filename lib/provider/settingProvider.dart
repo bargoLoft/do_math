@@ -8,9 +8,10 @@ class Setting with ChangeNotifier {
   double _timeLimit;
   int _challengeStage;
   String _nickname;
+  int _id;
 
   Setting(this._autoFocus, this._left, this._rtl, this._timeLimit, this._challengeStage,
-      this._nickname);
+      this._nickname, this._id);
 
   bool getAutoFocus() => _autoFocus;
   bool getLeft() => _left;
@@ -18,6 +19,7 @@ class Setting with ChangeNotifier {
   double getTimeLimit() => _timeLimit;
   int getChallengeStage() => _challengeStage;
   String getNickName() => _nickname;
+  int getId() => _id;
 
   void setAutoFocus(bool focus) async {
     final prefs = await SharedPreferences.getInstance();
@@ -55,6 +57,12 @@ class Setting with ChangeNotifier {
     prefs.setString('nickName', nickName);
   }
 
+  void setId(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    _id = id;
+    prefs.setInt('id', id);
+  }
+
   void loadSharedPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('autoFocus') != null) {
@@ -86,6 +94,11 @@ class Setting with ChangeNotifier {
       _nickname = prefs.getString('nickName')!;
     } else {
       prefs.setString('nickName', '');
+    }
+    if (prefs.getInt('id') != null) {
+      _id = prefs.getInt('id')!;
+    } else {
+      prefs.setInt('id', 0);
     }
     notifyListeners();
   }

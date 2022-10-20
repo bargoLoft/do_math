@@ -26,81 +26,81 @@ class _RankingPageState extends State<RankingPage> with SingleTickerProviderStat
     super.dispose();
   }
 
-  Future<void> _update(DocumentSnapshot documentSnapshot) async {
-    nameController.text = documentSnapshot['id'];
-
-    await showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (BuildContext context) {
-          return SizedBox(
-            child: Padding(
-              padding: EdgeInsets.all(4),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final String name = nameController.text;
-                      await userProduct.doc(documentSnapshot.id).update({'id': name});
-                      nameController.text = '';
-                      Navigator.pop(context);
-                    },
-                    child: Text('확인'),
-                  )
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Future<void> _create() async {
-    await showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (BuildContext context) {
-          return SizedBox(
-            child: Padding(
-              padding: EdgeInsets.all(4),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final String name = nameController.text;
-                      await userProduct.add({'id': name});
-                      nameController.text = '';
-                      Navigator.pop(context);
-                    },
-                    child: Text('확인'),
-                  )
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Future<void> _delete(String productId) async {
-    await userProduct.doc(productId).delete();
-  }
+  // Future<void> _update(DocumentSnapshot documentSnapshot) async {
+  //   nameController.text = documentSnapshot['id'];
+  //
+  //   await showModalBottomSheet(
+  //       context: context,
+  //       isScrollControlled: true,
+  //       builder: (BuildContext context) {
+  //         return SizedBox(
+  //           child: Padding(
+  //             padding: EdgeInsets.all(4),
+  //             child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 TextField(
+  //                   controller: nameController,
+  //                   decoration: InputDecoration(labelText: 'Name'),
+  //                 ),
+  //                 SizedBox(
+  //                   height: 50,
+  //                 ),
+  //                 ElevatedButton(
+  //                   onPressed: () async {
+  //                     final String name = nameController.text;
+  //                     await userProduct.doc(documentSnapshot.id).update({'id': name});
+  //                     nameController.text = '';
+  //                     Navigator.pop(context);
+  //                   },
+  //                   child: Text('확인'),
+  //                 )
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       });
+  // }
+  //
+  // Future<void> _create() async {
+  //   await showModalBottomSheet(
+  //       context: context,
+  //       isScrollControlled: true,
+  //       builder: (BuildContext context) {
+  //         return SizedBox(
+  //           child: Padding(
+  //             padding: EdgeInsets.all(4),
+  //             child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 TextField(
+  //                   controller: nameController,
+  //                   decoration: InputDecoration(labelText: 'Name'),
+  //                 ),
+  //                 SizedBox(
+  //                   height: 50,
+  //                 ),
+  //                 ElevatedButton(
+  //                   onPressed: () async {
+  //                     final String name = nameController.text;
+  //                     await userProduct.add({'id': name});
+  //                     nameController.text = '';
+  //                     Navigator.pop(context);
+  //                   },
+  //                   child: Text('확인'),
+  //                 )
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       });
+  // }
+  //
+  // Future<void> _delete(String productId) async {
+  //   await userProduct.doc(productId).delete();
+  // }
 
   Widget imageProfile() {
     return Padding(
@@ -119,6 +119,8 @@ class _RankingPageState extends State<RankingPage> with SingleTickerProviderStat
   int? firstGroupValue = 0;
   int? typeGroupValue = 0;
   int? secondGroupValue = 0;
+  List typeSymbol = ['+', '-', '×', '÷'];
+
   final rankIconSize = 10.0;
   List<Color> medalColor = [
     const Color(0xffFFD700),
@@ -132,6 +134,7 @@ class _RankingPageState extends State<RankingPage> with SingleTickerProviderStat
       appBar: AppBar(
         title: Text('랭킹'), // 종류에 따라 변경. 변수 선언.
       ),
+      // dot indicator 추가 예
       body: PageView(
         scrollDirection: Axis.horizontal,
         children: [
@@ -301,9 +304,19 @@ class _RankingPageState extends State<RankingPage> with SingleTickerProviderStat
               ),
               Flexible(
                 child: StreamBuilder(
-                  stream: rankProduct.snapshots(),
+                  stream: rankProduct
+                      .where("type",
+                          isEqualTo:
+                              '${typeSymbol[typeGroupValue!]}[${firstGroupValue! + 1}, ${secondGroupValue! + 1}]')
+                      .orderBy('score')
+                      .snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                    if (streamSnapshot.hasData) {
+                    if (streamSnapshot.hasError) {
+                      print(streamSnapshot.error);
+                      return Text('error!');
+                    } else if (streamSnapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else {
                       return ListView.builder(
                           itemCount: streamSnapshot.data!.docs.length,
                           itemBuilder: (context, index) {
@@ -341,7 +354,6 @@ class _RankingPageState extends State<RankingPage> with SingleTickerProviderStat
                             );
                           });
                     }
-                    return const Center(child: CircularProgressIndicator());
                   },
                 ),
               ),

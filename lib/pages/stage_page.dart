@@ -141,10 +141,16 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
 
       record?.playCount += 1;
       record?.correct += currentAnswer;
-      // 자신 최고 기록 갱신하면.. Hive에 적용하고 서버로 전송.
-      if (duration.inSeconds / 100 < record!.highScore) {
-        CollectionReference rankProduct = FirebaseFirestore.instance.collection('ranking');
 
+      // 자신 최고 기록 갱신하면.. Hive에 적용하고 서버로 전송.
+      if (duration.inSeconds / 100 < record!.highScore * 100) {
+        CollectionReference rankProduct = FirebaseFirestore.instance.collection('ranking');
+        await rankProduct.add({
+          'id': Provider.of<Setting>(context, listen: false).getId(),
+          'name': Provider.of<Setting>(context, listen: false).getNickName(),
+          'score': duration.inSeconds / 100,
+          'type': '${widget.type}${widget.digital}',
+        });
         record.highScore = duration.inSeconds / 100;
         print(record.highScore);
       }

@@ -5,7 +5,6 @@ import 'package:do_math/pages/stage_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,7 +49,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadCounter();
-      if (Provider.of<Setting>(context, listen: false).getNickName() != '') {
+      if (Provider.of<Setting>(context, listen: false).getNickName() == '') {
         _login();
       }
     });
@@ -85,6 +84,7 @@ class _HomePageState extends State<HomePage> {
                     await usersProduct.add({'name': name, 'exp': 0, 'id': count1});
                     countProduct.doc('IQyr8ylH1NPSabBotOpW').update({'count': count1 + 1});
                     Provider.of<Setting>(context, listen: false).setNickName(name);
+                    Provider.of<Setting>(context, listen: false).setId(count1);
                     nameController.text = '';
                     Navigator.pop(context);
                   } else {

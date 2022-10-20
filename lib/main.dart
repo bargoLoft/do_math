@@ -31,6 +31,7 @@ void main() async {
                 (prefs.getDouble('timeLimit')) ?? 10.0,
                 (prefs.getInt('challenge')) ?? 0,
                 (prefs.getString('nickName')) ?? '',
+                (prefs.getInt('id') ?? 0),
               )),
     ], child: const MyApp()),
   );
