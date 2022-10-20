@@ -47,8 +47,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _loadCounter();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadCounter();
       if (Provider.of<Setting>(context, listen: false).getNickName() == '') {
         _login();
       }
@@ -81,7 +81,9 @@ class _HomePageState extends State<HomePage> {
                     final String name = nameController.text;
                     var count = await countProduct.doc('IQyr8ylH1NPSabBotOpW').get();
                     int count1 = count['count'];
-                    await usersProduct.add({'name': name, 'exp': 0, 'id': count1});
+                    await usersProduct
+                        .doc(count1.toString())
+                        .set({'name': name, 'exp': 0, 'id': count1});
                     countProduct.doc('IQyr8ylH1NPSabBotOpW').update({'count': count1 + 1});
                     Provider.of<Setting>(context, listen: false).setNickName(name);
                     Provider.of<Setting>(context, listen: false).setId(count1);
@@ -141,6 +143,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void showBottomSheet(BuildContext context) {
+    _autoFocus = Provider.of<Setting>(context, listen: false).getAutoFocus();
+    _isLeftHanded = Provider.of<Setting>(context, listen: false).getLeft();
+    _isRtL = Provider.of<Setting>(context, listen: false).getRtL();
     SliderController sliderController =
         SliderController(Provider.of<Setting>(context, listen: false).getTimeLimit());
 
@@ -392,13 +397,13 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: WrapCrossAlignment.center,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(bottom: 2.0),
+            padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
             child: GestureDetector(
               onTap: () {
                 showCharacter(context);
               },
               child: CircleAvatar(
-                radius: 20,
+                radius: 15,
                 backgroundColor: Colors.white,
                 child: Icon(
                   Icons.question_mark_rounded,
@@ -413,9 +418,13 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(fontSize: 8),
                 )
               : Text(
-                  '${Provider.of<Setting>(context).getNickName()} Lv.${(total.highScore) ~/ 100} ${((total.highScore) % 100).toInt()}%',
-                  style: const TextStyle(fontSize: 8),
+                  Provider.of<Setting>(context).getNickName(),
+                  style: TextStyle(fontSize: 8),
                 ),
+          // : Text(
+          //     '${Provider.of<Setting>(context).getNickName()} Lv.${(total.highScore) ~/ 100} ${((total.highScore) % 100).toInt()}%',
+          //     style: const TextStyle(fontSize: 8),
+          //   ),
         ],
       ),
     );

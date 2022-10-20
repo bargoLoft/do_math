@@ -30,7 +30,7 @@ class Setting with ChangeNotifier {
   void setLeft(bool left) async {
     final prefs = await SharedPreferences.getInstance();
     _left = left;
-    prefs.setBool('autoFocus', left);
+    prefs.setBool('left', left);
   }
 
   void setRtL(bool rtl) async {

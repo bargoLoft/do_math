@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 class RankingPage extends StatefulWidget {
   const RankingPage({Key? key}) : super(key: key);
@@ -142,10 +143,10 @@ class _RankingPageState extends State<RankingPage> with SingleTickerProviderStat
             // 총 경험치 랭킹
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(5.0),
                 child: Text(
-                  '2022년 10월 22일 PM 10:00 기준  ',
+                  DateFormat('yyyy년 MM월 dd일 HH시 mm분 기준').format(DateTime.now()),
                   style: TextStyle(fontSize: 10),
                   textAlign: TextAlign.start,
                 ),
@@ -298,7 +299,7 @@ class _RankingPageState extends State<RankingPage> with SingleTickerProviderStat
                 ],
               ),
               Text(
-                '2022년 10월 22일 PM 10:00 기준  ',
+                DateFormat('yyyy년 MM월 dd일 HH시 mm분 기준 ').format(DateTime.now()),
                 style: TextStyle(fontSize: 10),
                 textAlign: TextAlign.start,
               ),
