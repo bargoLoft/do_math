@@ -76,8 +76,14 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 30),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColorLight,
+                  foregroundColor: Theme.of(context).primaryColorDark,
+                ),
                 onPressed: () async {
-                  if (nameController.text != '' && nameController.text.length >= 2) {
+                  if (nameController.text != '' &&
+                      nameController.text.length >= 2 &&
+                      nameController.text.length <= 8) {
                     final String name = nameController.text;
                     var count = await countProduct.doc('IQyr8ylH1NPSabBotOpW').get();
                     int count1 = count['count'];
