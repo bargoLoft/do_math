@@ -7,6 +7,7 @@ import 'package:do_math/models/record.dart';
 import 'package:do_math/problems/algorithm.dart';
 import 'package:do_math/widgets/count_down.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
@@ -38,7 +39,7 @@ class StagePage extends StatefulWidget {
 class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
   final _textController = TextEditingController();
   late AnimationController _countController;
-  late AnimationController lottieController;
+  late AnimationController _lottieController;
 
   late List<int> questions;
   String question = '';
@@ -68,7 +69,7 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
         next(false);
       }
     });
-    lottieController = AnimationController(vsync: this);
+    _lottieController = AnimationController(vsync: this);
     _countController.forward();
     getNewQuestion();
   }
@@ -83,7 +84,7 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
       _countController.dispose();
     }
     timer?.cancel();
-    lottieController.dispose();
+    _lottieController.dispose();
     super.dispose();
   }
 
@@ -142,12 +143,14 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
       record?.playCount += 1;
       record?.correct += currentAnswer;
 
+      // id 기반으로 Firebase에 경험치 업로드
+      var id = Provider.of<Setting>(context, listen: false).getId();
+      CollectionReference rankProduct = FirebaseFirestore.instance.collection('ranking');
+      CollectionReference userProduct = FirebaseFirestore.instance.collection('users');
+      await userProduct.doc(id.toString()).update({'exp': totalRecord?.highScore.round()});
+
       // 자신 최고 기록 갱신하면.. Hive에 적용하고 서버로 전송.
       if (duration.inSeconds / 100 < record!.highScore) {
-        final id = Provider.of<Setting>(context, listen: false).getId();
-        CollectionReference rankProduct = FirebaseFirestore.instance.collection('ranking');
-        CollectionReference userProduct = FirebaseFirestore.instance.collection('users');
-        await userProduct.doc(id.toString()).update({'exp': totalRecord?.highScore.round()});
         await rankProduct.add({
           'id': id,
           'name': Provider.of<Setting>(context, listen: false).getNickName(),
@@ -269,7 +272,7 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
   // widget.digital[1],highScore: duration.inSeconds / 100),
 
   Widget _buildLottie(String assetName) {
-    lottieController = AnimationController(vsync: this);
+    AnimationController lottieController = AnimationController(vsync: this);
     return Lottie.asset(
       'assets/lotties/$assetName.json',
       repeat: false,
@@ -286,6 +289,29 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
           ..forward();
         if (lottieController.isCompleted) {
           lottieController.dispose();
+        }
+      },
+    );
+  }
+
+  Widget _buildLottie2(String assetName) {
+    AnimationController lottieController2 = AnimationController(vsync: this);
+    return Lottie.asset(
+      'assets/lotties/$assetName.json',
+      repeat: false,
+      animate: true,
+      height: 400,
+      width: 200,
+      fit: BoxFit.fill,
+      controller: lottieController2,
+      onLoaded: (composition) {
+        // Configure the AnimationController with the duration of the
+        // Lottie file and start the animation.
+        lottieController2
+          ..duration = composition.duration * 1.15
+          ..forward();
+        if (lottieController2.isCompleted) {
+          lottieController2.dispose();
         }
       },
     );
@@ -320,7 +346,8 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
         barrierColor: Colors.black.withOpacity(0.2),
         barrierDismissible: false,
         builder: (BuildContext context) {
-          List medalColor = ['gold', 'silver', 'copper'];
+          List _medalColor = ['gold', 'silver', 'copper'];
+          List _medaltext = ['최고에요', '훌륭해요', '조금만 더'];
           return Dialog(
             backgroundColor: Colors.white,
             elevation: 5,
@@ -330,86 +357,135 @@ class _StagePageState extends State<StagePage> with TickerProviderStateMixin {
               aspectRatio: 10 / 15,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Stack(
+                  alignment: AlignmentDirectional.topCenter,
                   children: [
-                    _buildLottie(medalColor[medalColorCalculator(
-                        type: widget.type,
-                        index1: widget.digital[0],
-                        index2: widget.digital[1],
-                        highScore: duration.inSeconds / 100)]),
-                    RichText(
-                      text: TextSpan(
-                        text: currentAnswer.toString(),
-                        style: TextStyle(
-                          fontSize: 50,
-                          color:
-                              currentAnswer >= 4 ? Theme.of(context).primaryColorDark : Colors.red,
-                        ),
-                        children: const [
-                          TextSpan(
-                              text: '/10',
-                              style: TextStyle(
-                                fontSize: 30,
-                                color: Colors.grey,
-                              )),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      '걸린 시간 : ${(duration.inSeconds / 100).toString().padLeft(2, '0')}s',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        IconButton(
-                          iconSize: 40,
-                          onPressed: () {
-                            _countController.dispose();
-                            timer?.cancel();
-                            Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.home_rounded),
+                        _buildLottie(_medalColor[medalColorCalculator(
+                            type: widget.type,
+                            index1: widget.digital[0],
+                            index2: widget.digital[1],
+                            highScore: duration.inSeconds / 100)]),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        //   children: [
+                        //     Icon(FontAwesomeIcons.circleCheck, size: 30),
+                        //     RichText(
+                        //       text: TextSpan(
+                        //         text: currentAnswer.toString(),
+                        //         style: TextStyle(
+                        //           fontSize: 40,
+                        //           color: currentAnswer >= 4
+                        //               ? Theme.of(context).primaryColorDark
+                        //               : Colors.red,
+                        //         ),
+                        //         children: const [
+                        //           TextSpan(
+                        //               text: '/10',
+                        //               style: TextStyle(
+                        //                 fontSize: 30,
+                        //                 color: Colors.grey,
+                        //               )),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        Text(
+                          _medaltext[medalColorCalculator(
+                              type: widget.type,
+                              index1: widget.digital[0],
+                              index2: widget.digital[1],
+                              highScore: duration.inSeconds / 100)],
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            color: medalColor[medalColorCalculator(
+                                type: widget.type,
+                                index1: widget.digital[0],
+                                index2: widget.digital[1],
+                                highScore: duration.inSeconds / 100)],
+                          ),
                         ),
-                        (widget.isChallenge &&
-                                medalColorCalculator(
-                                        type: widget.type,
-                                        index1: widget.digital[0],
-                                        index2: widget.digital[1],
-                                        highScore: duration.inSeconds / 100) <
-                                    2)
-                            ? IconButton(
-                                iconSize: 60,
-                                onPressed: () {
-                                  Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
-                                  Challenge challenge = challenges[
-                                      Provider.of<Setting>(context, listen: false)
-                                          .getChallengeStage()];
-                                  widget.type = challenge.type;
-                                  widget.digital = [challenge.index1, challenge.index2];
-                                  refreshStage();
-                                },
-                                icon: const Icon(Icons.arrow_forward_rounded))
-                            : IconButton(
-                                iconSize: 60,
-                                onPressed: () {
-                                  Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
-                                  refreshStage();
-                                },
-                                icon: const Icon(Icons.refresh_rounded),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Icon(FontAwesomeIcons.clock, size: 30),
+                            RichText(
+                              text: TextSpan(
+                                text: '${(duration.inSeconds / 100).toString().padLeft(2, '0')}',
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColorDark,
+                                ),
+                                children: const [
+                                  TextSpan(
+                                      text: 's',
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        color: Colors.grey,
+                                      )),
+                                ],
                               ),
-                        IconButton(
-                          iconSize: 30,
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, 'record'); // pushNamed로 한 번에 가도록 변경
-                          },
-                          icon: const Icon(Icons.leaderboard_rounded),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            IconButton(
+                              iconSize: 40,
+                              onPressed: () {
+                                _countController.dispose();
+                                timer?.cancel();
+                                Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.home_rounded),
+                            ),
+                            (widget.isChallenge &&
+                                    medalColorCalculator(
+                                            type: widget.type,
+                                            index1: widget.digital[0],
+                                            index2: widget.digital[1],
+                                            highScore: duration.inSeconds / 100) <
+                                        2)
+                                ? IconButton(
+                                    iconSize: 60,
+                                    onPressed: () {
+                                      Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
+                                      Challenge challenge = challenges[
+                                          Provider.of<Setting>(context, listen: false)
+                                              .getChallengeStage()];
+                                      widget.type = challenge.type;
+                                      widget.digital = [challenge.index1, challenge.index2];
+                                      refreshStage();
+                                    },
+                                    icon: const Icon(Icons.arrow_forward_rounded))
+                                : IconButton(
+                                    iconSize: 60,
+                                    onPressed: () {
+                                      Navigator.pop(context); // pushNamed로 한 번에 가도록 변경
+                                      refreshStage();
+                                    },
+                                    icon: const Icon(Icons.refresh_rounded),
+                                  ),
+                            IconButton(
+                              iconSize: 30,
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pushNamed(context, 'record'); // pushNamed로 한 번에 가도록 변경
+                              },
+                              icon: const Icon(Icons.leaderboard_rounded),
+                            ),
+                          ],
                         ),
                       ],
                     ),
+                    Container(child: _buildLottie2('confetti')),
                   ],
                 ),
               ),

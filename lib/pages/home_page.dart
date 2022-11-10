@@ -285,7 +285,7 @@ class _HomePageState extends State<HomePage> {
                             Positioned(
                               left: 20,
                               child: Text(
-                                'hadamath v1.0.0\n2022 bargoLoft',
+                                'hadamath v1.0.4\n2022 bargoLoft',
                                 style: TextStyle(
                                   fontSize: 10,
                                   color: Colors.grey.shade400,
