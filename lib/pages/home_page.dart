@@ -289,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                             Positioned(
                               left: 20,
                               child: Text(
-                                'domath v1.0.4\n2022 bargoLoft',
+                                'domath v1.0.4\n2023 bargoLoft',
                                 style: TextStyle(
                                   fontSize: 10,
                                   color: Colors.grey.shade400,
