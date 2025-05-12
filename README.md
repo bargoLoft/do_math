@@ -1,16 +1,80 @@
-# do_math
+✌️ 두수앞 (Do! Math)
 
-A new Flutter project.
+초등 수준의 덧셈, 뺄셈, 곱셈, 나눗셈 문제를 자동 생성하고 푸는 앱.
+Flutter로 개발되었으며, Firebase 연동과 Provider 상태 관리 등 다양한 실험을 담았습니다.
 
-## Getting Started
+⸻
 
-This project is a starting point for a Flutter application.
+📱 앱 소개
 
-A few resources to get you started if this is your first Flutter project:
+두수앞은 사칙연산 연습을 위한 간단한 모바일 앱입니다.
+“두 수 앞의 연산 문제를 빠르게 푸는 연습을 해보자”는 취지에서 출발했습니다.
+	•	난이도 조절을 위해 자릿수를 설정 가능
+	•	뺄셈 시 음수가 안 나오도록 자동 정렬
+	•	나눗셈은 항상 나누어 떨어지도록 문제 구성
+	•	단순한 로직이지만, 로직을 처음부터 스스로 짜 본 것이 핵심
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+앱 아이콘은 직접 디자인 툴(프로 크리에이터)로 제작
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+⸻
+
+🔧 사용 기술 및 시도
+
+항목	설명
+개발 언어	Dart (Flutter Framework)
+상태관리	Provider
+백엔드	Firebase (Firestore, Auth)
+기타 시도	문제 자동 생성 로직 구현앱 설정 저장 간단한 애니메이션 적용 예정
+배포 상태	(앱스토어 내려감 — 추후 재업 예정)
+
+
+⸻
+
+🧠 문제 생성 로직
+
+모든 연산 문제는 사용자가 지정한 자릿수(digit)와 문제 개수(count)에 따라 생성됩니다.
+예: digit = [1,1,2], count = 3 → 한 자리, 한 자리, 두 자리 숫자로 구성된 3문제 생성.
+
+List<int> num1 = List.generate(
+  count,
+  (int i) => rng.nextInt(
+    (pow(10, digital[i]) - pow(10, digital[i] - 1)).toInt()
+  ) + pow(10, digital[i] - 1).toInt());
+
+	•	덧셈 / 곱셈: 난이도에 맞춰 난수 생성
+	•	뺄셈: 자동 정렬 후 내림차순 반환 → 음수 방지
+	•	나눗셈: 모든 수를 곱한 뒤, 하나씩 나눌 수 있도록 문제 생성
+
+⸻
+
+🤯 배운 점 / 느낀 점
+	•	스파게티 코드에서 벗어나려 했지만…
+여전히 어려웠습니다. 상태관리는 setState 범벅, Provider도 어설펐습니다.
+	•	서버랑 처음 연결해봤습니다.
+Firebase를 통한 데이터 송수신을 경험하며, 뭔가 **“앱 같아졌다”**는 느낌을 받았습니다.
+	•	기능을 넣을수록 구조가 무너졌습니다.
+이 과정에서 클린 아키텍처, 상태 관리, UI/UX 설계에 대해 진지하게 고민하게 되었습니다.
+	•	개발은 하고 싶을 때 하는 게 제일 잘 되더라
+몰입은 타이밍. 작업과 휴식의 균형을 고민하게 됐습니다.
+
+⸻
+
+🎯 다음 목표
+	•	Bloc 패턴 학습
+	•	Firebase 인증, 데이터 저장 고도화
+	•	애니메이션 활용 능력 향상
+	•	퍼즐류 미니게임 앱 제작 (Flame 엔진, Aseprite 등 고려 중)
+
+⸻
+
+📸 스크린샷 및 시연 영상
+
+준비 중입니다. 추후 추가 예정.
+
+⸻
+
+📚 관련 링크
+	•	https://velog.io/@bargoloft/두수앞-7.-출시
+	•	참고한 Flutter 게임 앱: OmniChess, 4 Pics 1 Word, Orbit
+
+⸻
